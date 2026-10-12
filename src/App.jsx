@@ -49,7 +49,8 @@ export default function App() {
   if (!event) return <main className="status-page" role="status"><span className="status-mark">🥩</span><p>이벤트를 불러오고 있어요.</p></main>;
   if (!event.enabled) return <main className="status-page"><span className="status-mark">🥩</span><h1>현재 이벤트 비활성화입니다</h1><p>잠시 후 돈가스 지도로 이동합니다.</p><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
   const Page = eventPages[event.webPath];
-  return <main className="event-page"><header className="page-header"><span>돈가스 지도</span>{native && <button onClick={() => bridge.close().catch(openHome)}>닫기 ✕</button>}</header>
+  const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
+  return <main className="event-page"><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
   </main>;
