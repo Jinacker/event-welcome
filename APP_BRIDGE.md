@@ -23,7 +23,7 @@ bridge 호출은 Promise이며, 결과 또는 오류로 돌아온다. 페이지�
 | 필드 | 실제 전달 값 |
 | --- | --- |
 | user | `{ id, nickname, profilePhotoUrl }` 또는 null |
-| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData` |
+| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData`, optional `stampTour` |
 | platform | `ios` / `android` |
 | appVersion | 앱 버전 문자열 |
 | safeArea | `{ top, bottom, left, right }` |
@@ -108,11 +108,9 @@ ID는 숫자 타입의 양의 정수이며 최대 2147483647이다. 문자열 ID
 const result = await bridge.api('/context');
 // result: { event, user: { id, nickname, profilePhotoUrl } }
 
-// 예시: 서버에 이 경로를 구현한 이후에만 사용할 수 있다.
-const stamp = await bridge.api('/stamps', {
-  method: 'POST',
-  data: { code: context.entry.code },
-});
+// 현재 로그인된 앱 세션 사용자의 스탬프 조회 (적립 POST API는 제공하지 않음)
+const progress = await bridge.api('/stamps');
+// { eventId, total, earned, stamps: [{ id, restaurantId, restaurantName, earnedAt }] }
 ```
 
 `bridge.api('/context')`는 앱이 `/api/v1/events/<현재 이벤트 ID>/api/context`를 요청한다.
@@ -129,8 +127,36 @@ path는 `/stamps/list`처럼 영문·숫자·underscore·hyphen으로 된 상대
 | --- | --- |
 | GET /api/v1/events/:id | 공개 설정 조회. 비활성도 조회 가능 |
 | GET /api/v1/events/:id/api/context | 사용자 세션 인증 및 활성 상태 확인 |
+| GET /api/v1/events/:id/api/stamps | 현재 세션 사용자만의 적립 내역·총 칸 수 조회. 활성 상태 필요 |
 
-스탬프·참여·방문 인증·사진 업로드 API는 아직 구현되지 않았다.
+스탬프는 기존 앱의 새 공개 기록 저장 시 서버에서 자동 적립한다. 사진 1장 이상, 후기 앞뒤 공백 제거 후 Unicode 문자 30개 이상,
+활성 이벤트의 참여 가게 조건을 모두 만족해야 한다. 기존 photoUrl과 새 photoUrls 모두 지원한다.
+같은 이벤트·사용자·가게는 한 장만 받으며 수정·공개 전환은 소급 적립하지 않는다. 적립 후 기록 삭제·수정은 스탬프를 회수하지 않는다.
+스탬프 적립 API나 NFC 방문 인증·이벤트 사진 업로드 API는 제공하지 않는다. entry.code로 적립을 요청하지 않는다.
+
+이벤트 optional stampTour 설정:
+
+```js
+{
+  enabled: true,
+  restaurants: [{ id: 123, name: '참여 가게' }], // 설정 순서, 최대 200곳
+  stampImageUrl: '어드민 이벤트 전용 업로더가 반환한 GCS URL',
+  pinMode: 'same', // 또는 byRating
+  pinImageUrl: '공통 핀 URL', // 빈 문자열이면 기존 핀
+  ratingPinImages: { '1': '★1 핀 URL', '2': '★2 핀 URL' }, // 1=normal, 2=good, 3=best, 4=top5
+  startedAt: '서버가 지정한 활성 시작 ISO 시각'
+}
+```
+
+startedAt은 읽기 전용으로 생각한다. 어드민이 활성화할 때 서버가 지정하며 비활성 후 다시 켜면 갱신한다.
+새 투어에는 새 이벤트 ID를 사용한다. 기존 ID를 다시 활성화하면 기존 스탬프·가게별 중복 제한을 이어서 사용한다.
+StampTourBoard는 참여 가게 수만큼 칸을 만들고 실제 earned 수만 앞에서부터 채운다. 17곳을 등록하면 17칸이다.
+가게 설정이 줄어도 이미 받은 스탬프는 표시한다. native 브리지에서 /stamps를 처음·60초 간격·웹 visible 전환에 조회한다.
+브라우저에는 인증 브리지가 없으므로 앱 열기 안내를 표시한다. 조회 실패는 0개 적립으로 확정하지 않고 재시도 안내를 표시한다.
+사진·후기 조건 미달이어도 기존 기록 저장은 성공한다. 적립 저장 장애 시 기록 응답의 optional eventStamp.status가 unavailable이며 기록은 유지된다.
+적립 관련 대기는 전체 최대 3초이며 제한 이후 늦게 받은 설정으로 새 DB 적립을 시작하지 않는다. 푸시 HTTP는 최대 1.5초다.
+이미 적립 커밋이 확인됐으면 푸시가 늦어도 earned를 반환한다. 제한 당시 진행 중이던 DB 쓰기는 늦게 완료될 수 있어 unavailable은 미적립 확정이 아니다.
+자동 재적립 작업은 없으므로 해당 장애는 스탬프판 재조회와 문의·서버 운영 확인이 필요하다.
 새 서버 기능을 `/events/:id/api/...` 아래에 추가하면 이 브리지로 앱 업데이트 없이 호출할 수 있다.
 새 쓰기 API는 서버에서 세션 인증, 실제 참여 권한·입력 검증·중복 처리와 requireActive를 적용해야 한다.
 
