@@ -36,7 +36,7 @@ bridge 호출은 Promise이며, 결과 또는 오류로 돌아온다. 페이지�
 user가 null이거나 nickname이 없을 수 있으므로 표시할 때 기본값을 둔다.
 현재 웹 상단은 nickname이 있으면 `OOO님 환영이에요!`, 없으면 `환영해요!`를 표시한다.
 context는 요청 시점의 값이다. 사용자 정보를 다시 확인하려면 getContext를 다시 호출하거나 인증 API `/context`를 요청한다.
-현재 App.jsx의 주기적 `/context` 조회는 이벤트 상태만 갱신하며 context.user를 자동으로 갱신하지 않는다.
+주기적 `/context` 조회는 이벤트 상태만 갱신한다. 사용자가 당겨서 새로고침하면 최신 이벤트와 안전한 사용자 정보도 갱신한다.
 
 ```js
 const current = await bridge.getContext();
@@ -265,3 +265,34 @@ if (context.navigationTargets?.includes('event_map')) {
 - 이 query 미리보기는 코드 배포 후 `https://event-welcome.vercel.app/seongbukcheon?preview=1`에도 사용할 수 있다. 실제 앱 이동·적립은 실행하지 않는다.
 - 테스트 DB 실제 목업: 서버에서 `node -r dotenv/config -r ts-node/register scripts/seed-event-preview.ts dotenv_config_path=.env.test`.
 - 테스트 DB 전용 가드, 목업 사용자5명·기록/스탬프22개(7·7·4·3·1). 재실행은 목업 전용 UUID의 데이터만 갱신한다. 운영 DB·공개 이벤트 일정·푸시는 변경하지 않는다.
+
+
+## 당겨서 새로고침
+
+앱 업데이트 없이 웹에서 처리한다. 화면 맨 위에서 한 손가락으로 아래로 당긴 뒤 놓으면 상단 회전 로딩 표시를 보여준다.
+짧은 당김, 가로 스와이프, 화면 중간에서 시작한 당김, 다중 터치, touchcancel은 새로고침하지 않는다.
+피드 가로 스크롤과 랭킹 내부 스크롤, 폼 입력, `[data-no-pull-refresh]` 영역은 제스처 시작 대상에서 제외한다.
+
+App.jsx가 `/context`를 먼저 조회하고, 활성 상태면 등록된 콘텐츠 영역을 함께 새로 불러온다.
+현재 성북천은 `/ranking`, `/feed`, `/stamps`를 다시 조회한다. 모든 등록 영역의 요청이 끝날 때까지 로딩 표시를 유지하고 실패한 영역의 기존 데이터는 남긴다.
+비활성410은 기존 비활성 안내·2초 후 앱 홈 이동으로 처리한다. 조회 실패를 비활성으로 처리하지 않는다.
+일반 브라우저는 공개 이벤트 설정만 다시 조회하며 인증 사용자 데이터는 요청하지 않는다. 목업 preview에서는 목업 SDK만 사용한다.
+
+후속 이벤트에 새 데이터 영역을 만들면 `useEventRefresh()`로 해당 영역의 비동기 로더를 등록한다.
+
+```js
+import { useEventRefresh } from '../components/EventRefreshContext';
+import { singleFlight } from '../lib/refresh';
+const refresh = useEventRefresh();
+// useEffect 안에서 지역 load 함수 생성, register 후 cleanup 때 해제한다.
+const load = singleFlight(async () => {
+  const result = await bridge.api('/your-endpoint');
+  // 화면 상태 갱신. 실패는 화면에 안내한 뒤 throw하여 전체 로딩 종료에 반영한다.
+});
+const unregister = refresh.register(load);
+// cleanup: unregister();
+```
+
+초기·주기·수동 재시도와 당김 새로고침이 겹치면 singleFlight 로더의 같은 진행 중 Promise를 공유한다.
+새로고침 중 다시 당겨도 요청을 추가하지 않는다. 신규 브리지 method, 네이티브 WebView 속성, 서버 API 및 DB 변경은 없다.
+현재 캘린더는 일정이 걸치는 달만 넘길 수 있으며 기간을 주 단위 막대로 표시한다. 막대 안에 제목을 넣고 겹치는 일정은 줄을 나눈다.
