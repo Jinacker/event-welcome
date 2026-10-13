@@ -1,3 +1,5 @@
+import EventIcon from './EventIcon';
+import { formatRelativeTime } from '../lib/relativeTime';
 import { useEventRefresh } from './EventRefreshContext';
 import { singleFlight } from '../lib/refresh';
 import React, { useEffect, useState } from 'react';
@@ -40,7 +42,7 @@ export default function EventActivity({ event, bridge }) {
         <ol className="ranking-list">{ranking.items.map((item, index) => <li key={`${item.rank}-${index}`} className={item.isMe ? 'is-me' : ''}>
           <span className={`rank-number rank-${item.rank}`}>{item.rank}</span>
           <button className="rank-person" disabled={!item.userId || !item.isProfilePublic || !bridge.isNative} onClick={() => navigate('profile', { userId: item.userId })}>
-            {item.profilePhotoUrl ? <img src={item.profilePhotoUrl} alt="" /> : <span className="avatar-placeholder">🥩</span>}
+            {item.profilePhotoUrl ? <img src={item.profilePhotoUrl} alt="" /> : <span className="avatar-placeholder"><EventIcon name="user" size={17} filled /></span>}
             <strong>{item.nickname}{item.isMe && <small>나</small>}</strong>
           </button><span className="rank-count">{item.stampCount}<small>개</small></span>
         </li>)}</ol>
@@ -56,13 +58,23 @@ export default function EventActivity({ event, bridge }) {
       const width = e.currentTarget.firstElementChild?.getBoundingClientRect().width;
       if (width) setPage(Math.round(e.currentTarget.scrollLeft / (width + 12)));
     }}>{feed?.map((note) => <button className="hot-feed-card" key={note.id} onClick={() => navigate('note', { noteId: note.id })}>
-      <div className="hot-feed-top">{note.photoUrl ? <img className="hot-feed-photo" src={note.photoUrl} alt={`${note.restaurantName} 돈가스`} loading="lazy" /> : <div className="hot-feed-photo placeholder">🥩</div>}
-        <div className="hot-feed-copy"><div className="hot-feed-store"><strong>{note.restaurantName}</strong><span>›</span></div><small>{note.area || '성북천'}</small>
-          <div className="hot-feed-stars" aria-label={`만족도 ${note.satisfaction}점`}>{'★'.repeat(Math.max(0, Math.min(5, note.satisfaction || 0)))}<span>{Number(note.satisfaction || 0).toFixed(1)}</span></div>
-        </div></div>
-      <p className="hot-feed-review">{note.review}</p>
-      <div className="hot-feed-author">{note.user?.profilePhotoUrl ? <img src={note.user.profilePhotoUrl} alt="" /> : <span>🥩</span>}<span>{note.user?.nickname || '익명'}</span><time>{new Intl.DateTimeFormat('ko-KR', { month: 'numeric', day: 'numeric', timeZone: 'Asia/Seoul' }).format(new Date(note.createdAt))}</time></div>
-      <div className="hot-feed-stats"><span>♡ {note.likeCount || 0}</span><span>💬 {note.commentCount || 0}</span><span>◉ {note.viewCount || 0}</span><span className="hot-feed-detail">더 보기 ›</span></div>
+      <div className="hot-feed-top">
+        {note.photoUrl ? <img className="hot-feed-photo" src={note.photoUrl} alt={`${note.restaurantName} 돈가스`} loading="lazy" /> : <div className="hot-feed-photo placeholder"><EventIcon name="pin" size={28} /></div>}
+        <div className="hot-feed-copy">
+          <div className="hot-feed-store"><div><strong>{note.restaurantName}</strong>{note.area && <small>{note.area}</small>}</div><EventIcon name="chevron" size={18} /></div>
+          <div className="hot-feed-stars" aria-label={`만족도 ${note.satisfaction}점`}>
+            {[1, 2, 3, 4, 5].map((star) => <EventIcon key={star} name="star" size={13} filled={star <= Number(note.satisfaction || 0)} />)}
+            <span>{Number(note.satisfaction || 0).toFixed(1)}</span>
+          </div>
+          <p className="hot-feed-review">{note.review?.trim() || '남겨진 후기를 확인해보세요.'}</p>
+          <div className="hot-feed-footer">
+            <div className="hot-feed-author">{note.user?.profilePhotoUrl ? <img src={note.user.profilePhotoUrl} alt="" /> : <span className="hot-feed-avatar"><EventIcon name="user" size={12} filled /></span>}
+              <span className="hot-feed-username">{note.user?.nickname || '익명'}</span><time>{formatRelativeTime(note.createdAt)}</time>
+            </div>
+            <div className="hot-feed-stats"><span aria-label={`좋아요 ${note.likeCount || 0}개`}><EventIcon name="heart" size={12} filled />{note.likeCount || 0}</span><span aria-label={`댓글 ${note.commentCount || 0}개`}><EventIcon name="chat" size={12} />{note.commentCount || 0}</span></div>
+          </div>
+        </div>
+      </div>
     </button>)}</div>
     {!!feed?.length && <div className="feed-pagination" aria-label={`피드 ${Math.min(page + 1, feed.length)} / ${feed.length}`}>{feed.map((note, index) => <span key={note.id} className={index === page ? 'active' : ''} />)}</div>}
     {navigationError && <p role="alert">{navigationError}</p>}

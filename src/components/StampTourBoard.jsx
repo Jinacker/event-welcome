@@ -42,6 +42,9 @@ export default function StampTourBoard({ event, bridge }) {
   const received = new Set(progress?.stamps?.map((stamp) => stamp.restaurantId) ?? []);
   return <section className="stamp-tour" aria-label="스탬프 투어">
     <div className="stamp-summary"><div><strong>{progress ? earned : '—'} / {slots.length}</strong><p>현재 모은 스탬프</p></div><span>{progress ? `완주까지 ${Math.max(0, restaurants.length - earned)}곳` : '내 스탬프'}</span></div>
+    <div className="stamp-progress" role="progressbar" aria-label="스탬프 진행률" aria-valuemin={0} aria-valuemax={Math.max(1, slots.length)} aria-valuenow={earned}>
+      <span style={{ width: `${Math.min(100, earned / Math.max(1, slots.length) * 100)}%` }} />
+    </div>
     <p className="stamp-guide">참여 가게에 새 공개 기록을 남겨주세요.<br />사진 1장 이상·후기 30자 이상이면 가게별 스탬프 1장을 받아요.</p>
     {!bridge.isNative && <a className="app-button" href={`katsumap://event/${event.id}`}>앱에서 내 스탬프 보기</a>}
     {bridge.isNative && !progress && !error && <p role="status">스탬프를 불러오는 중...</p>}
