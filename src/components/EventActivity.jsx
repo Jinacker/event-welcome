@@ -1,7 +1,10 @@
+import { useEventRefresh } from './EventRefreshContext';
+import { singleFlight } from '../lib/refresh';
 import React, { useEffect, useState } from 'react';
 import { selectHotFeedCards } from '../lib/hotFeedSelection';
 
 export default function EventActivity({ event, bridge }) {
+  const eventRefresh = useEventRefresh();
   const [ranking, setRanking] = useState(null);
   const [feed, setFeed] = useState(null);
   const [errors, setErrors] = useState({});
@@ -10,7 +13,7 @@ export default function EventActivity({ event, bridge }) {
   const [navigationError, setNavigationError] = useState('');
   useEffect(() => {
     let stopped = false;
-    const load = async () => {
+    const load = singleFlight(async () => {
       if (!bridge.isNative) return;
       const results = await Promise.allSettled([bridge.api('/ranking'), bridge.api('/feed')]);
       if (stopped) return;
@@ -18,13 +21,16 @@ export default function EventActivity({ event, bridge }) {
       if (results[0].status === 'fulfilled') setRanking(results[0].value); else next.ranking = '랭킹을 불러오지 못했어요.';
       if (results[1].status === 'fulfilled') { setFeed(selectHotFeedCards(results[1].value.items)); setPage(0); } else next.feed = '피드를 불러오지 못했어요.';
       setErrors(next);
-    };
-    load();
-    const timer = setInterval(load, 60000);
-    const visible = () => { if (!document.hidden) load(); };
+      if (Object.keys(next).length) throw new Error('Event activity refresh failed');
+    });
+    const unregister = eventRefresh.register(load);
+    const reload = () => { load().catch(() => {}); };
+    reload();
+    const timer = setInterval(reload, 60000);
+    const visible = () => { if (!document.hidden) reload(); };
     document.addEventListener('visibilitychange', visible);
-    return () => { stopped = true; clearInterval(timer); document.removeEventListener('visibilitychange', visible); };
-  }, [event.id, bridge, attempt]);
+    return () => { stopped = true; unregister(); clearInterval(timer); document.removeEventListener('visibilitychange', visible); };
+  }, [event.id, bridge, attempt, eventRefresh]);
   const navigate = (target, params) => bridge.navigate(target, params).catch(() => setNavigationError('화면을 열지 못했어요. 다시 시도해주세요.'));
   return <section className="event-activity" aria-label="성북천 스탬프 랭킹과 피드">
     <div className="section-heading"><h2>성북천 스탬프 랭킹</h2><span>같은 개수는 공동 순위</span></div>

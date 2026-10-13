@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEventRefresh } from './EventRefreshContext';
+import { singleFlight } from '../lib/refresh';
+import React, { useEffect, useRef, useState } from 'react';
 import { stampSlots } from '../lib/stamps';
 
 export default function StampTourBoard({ event, bridge }) {
   const tour = event.stampTour;
+  const eventRefresh = useEventRefresh();
+  const reloadRef = useRef(async () => {});
   const [progress, setProgress] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const refresh = async () => {
     if (!bridge.isNative) return;
     setLoading(true);
-    try { const result = await bridge.api('/stamps'); setProgress(result); setError(''); }
+    try { await reloadRef.current(); }
     catch { setError('스탬프를 불러오지 못했어요. 다시 시도해주세요.'); }
     finally { setLoading(false); }
   };
@@ -17,17 +21,20 @@ export default function StampTourBoard({ event, bridge }) {
     setProgress(null);
     if (!tour?.enabled) return;
     let cancelled = false;
-    const load = async () => {
+    const load = singleFlight(async () => {
       if (!bridge.isNative) return;
       try { const result = await bridge.api('/stamps'); if (!cancelled) { setProgress(result); setError(''); } }
-      catch { if (!cancelled) setError('스탬프를 불러오지 못했어요. 다시 시도해주세요.'); }
-    };
-    load();
-    const interval = setInterval(load, 60000);
-    const onVisible = () => { if (document.visibilityState === 'visible') load(); };
+      catch (cause) { if (!cancelled) setError('스탬프를 불러오지 못했어요. 다시 시도해주세요.'); throw cause; }
+    });
+    reloadRef.current = load;
+    const unregister = eventRefresh.register(load);
+    const reload = () => { load().catch(() => {}); };
+    reload();
+    const interval = setInterval(reload, 60000);
+    const onVisible = () => { if (document.visibilityState === 'visible') reload(); };
     document.addEventListener('visibilitychange', onVisible);
-    return () => { cancelled = true; clearInterval(interval); document.removeEventListener('visibilitychange', onVisible); };
-  }, [event.id, tour?.enabled, bridge]);
+    return () => { cancelled = true; unregister(); clearInterval(interval); document.removeEventListener('visibilitychange', onVisible); };
+  }, [event.id, tour?.enabled, bridge, eventRefresh]);
   if (!tour?.enabled) return null;
   const restaurants = tour.restaurants ?? [];
   const earned = progress?.earned ?? 0;
