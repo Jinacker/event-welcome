@@ -1,3 +1,4 @@
+import { createEventDemo } from './lib/demo';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createEventBridge } from './bridge/client';
 import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent } from './lib/events';
@@ -5,7 +6,8 @@ import { eventPages } from './events';
 
 const API_ORIGIN = (import.meta.env.VITE_API_URL || 'https://katsu-map-api-181871710999.asia-northeast3.run.app').replace(/\/$/, '');
 export default function App() {
-  const bridge = useMemo(() => createEventBridge(), []);
+  const demo = useMemo(() => new URLSearchParams(window.location.search).get('preview') === '1' && !window.ReactNativeWebView ? createEventDemo() : null, []);
+  const bridge = useMemo(() => demo?.bridge ?? createEventBridge(), [demo]);
   const [event, setEvent] = useState(null);
   const [context, setContext] = useState(null);
   const [error, setError] = useState('');
@@ -51,6 +53,7 @@ export default function App() {
   const Page = eventPages[event.webPath];
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
   return <main className="event-page"><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
+    {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
   </main>;

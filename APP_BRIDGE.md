@@ -23,13 +23,14 @@ bridge 호출은 Promise이며, 결과 또는 오류로 돌아온다. 페이지�
 | 필드 | 실제 전달 값 |
 | --- | --- |
 | user | `{ id, nickname, profilePhotoUrl }` 또는 null |
-| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData`, optional `stampTour` |
+| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData`, optional `stampTour`, `calendar`, `mapView` |
 | platform | `ios` / `android` |
 | appVersion | 앱 버전 문자열 |
 | safeArea | `{ top, bottom, left, right }` |
 | entry | NFC·QR·딥링크에서 전달된 query 정보 |
 | bridgeVersion | 현재 1 |
 | capabilities | 지원하는 프로토콜 method 이름 배열 |
+| navigationTargets | 새 목적지 지원 여부. 현재 `["event_map"]`, 구버전에는 없음 |
 
 사용자 정보는 앱의 현재 세션 사용자다. user가 있다는 사실만으로 별도의 소셜 로그인 완료·이벤트 참여 완료를 판정하지 않는다.
 user가 null이거나 nickname이 없을 수 있으므로 표시할 때 기본값을 둔다.
@@ -97,6 +98,7 @@ await bridge.navigate('home');
 | note | noteId |
 | encyclopedia_post | postId |
 | event | eventId |
+| event_map | eventId. 참여 가게만 지도·목록으로 열기. navigationTargets 지원 확인 필요 |
 
 ID는 숫자 타입의 양의 정수이며 최대 2147483647이다. 문자열 ID와 목적지에 없는 params는 거부된다.
 임의 React Navigation 화면 이름·외부 URL을 navigate에 넣을 수 없다.
@@ -127,6 +129,9 @@ path는 `/stamps/list`처럼 영문·숫자·underscore·hyphen으로 된 상대
 | --- | --- |
 | GET /api/v1/events/:id | 공개 설정 조회. 비활성도 조회 가능 |
 | GET /api/v1/events/:id/api/context | 사용자 세션 인증 및 활성 상태 확인 |
+| GET /api/v1/events/:id/api/ranking | 현재 보유 개수 공동 순위. 상위 20위 최대 100명 및 내 순위. 비공개 프로필 가림 |
+| GET /api/v1/events/:id/api/feed | 이번 주(KST 월요일 기준) 스탬프 지급 원본 중 공개·미삭제 기록 반응 TOP 10 |
+| GET /api/v1/events/:id/api/map | 활성 투어 참여 가게의 기존 지도 DTO와 초기 시점 |
 | GET /api/v1/events/:id/api/stamps | 현재 세션 사용자만의 적립 내역·총 칸 수 조회. 활성 상태 필요 |
 
 스탬프는 기존 앱의 새 공개 기록 저장 시 서버에서 자동 적립한다. 사진 1장 이상, 후기 앞뒤 공백 제거 후 Unicode 문자 30개 이상,
@@ -221,3 +226,42 @@ try {
 현재 브리지 기능으로 만드는 웹·서버 기능은 이후 앱 업데이트 없이 추가할 수 있다.
 새 네이티브 기능·새 화면 목적지·새 프로토콜 버전을 요구하면 앱 수정·업데이트가 필요하다.
 사용자 개인정보 필드를 더 전달하는 것도 현재 허용 범위를 바꾸는 작업이므로 먼저 앱·서버 호출 흐름과 범위를 확인한다.
+
+## 랭킹·피드·캘린더·지도
+
+```js
+const ranking = await bridge.api('/ranking');
+// { eventId, items: [{ rank, userId|null, nickname, profilePhotoUrl|null, stampCount, isMe, isProfilePublic }], me|null }
+const feed = await bridge.api('/feed');
+// { eventId, items: 기존 커뮤니티 피드 카드 필드[] }
+const map = await bridge.api('/map');
+// { eventId, title, view: { lat, lng, level }, restaurants: 기존 가게 목록 DTO[] }
+if (context.navigationTargets?.includes('event_map')) {
+  await bridge.navigate('event_map', { eventId: event.id });
+}
+```
+
+보유 스탬프 수만으로 공동 순위를 정한다(예: 1·1·3위). 나만보기 전환으로 보유 수가 줄지 않으며 삭제 회수는 반영된다.
+비공개 프로필의 닉네임·사진·ID는 다른 사용자에게 노출하지 않는다. 랭킹은 상위 20위까지 최대 100명을 반환하며 본인 순위는 별도로 반환한다.
+피드는 실제 스탬프를 받은 원본 기록에 한한다. 나만보기 기록·삭제/숨김 기록은 표시하지 않는다.
+서버 반응 점수는 조회수+좋아요+미삭제 댓글 수다. 클라이언트는 기존 앱 hotFeedSelection과 동일하게 TOP10에서 랜덤4개를 뽑아 반응 순으로 정렬한다.
+이벤트·스탬프판·랭킹·피드는 처음과 60초 및 visible 전환에 갱신한다. 장애 때 빈 목록/0개로 확정하지 않고 재시도한다.
+
+기존 앱 커뮤니티·프로필 기록 응답에는 실제 지급 원본에만 optional `eventBadges: [{ eventId, title, stampImageUrl }]`가 추가된다.
+비활성 이벤트도 설정을 보관하므로 배지는 남는다. 로고를 별도 복사하거나 DB에 보존하지 않으며 어드민 로고 변경은 과거 카드에도 반영된다.
+설정/스탬프 조회 장애 또는 테이블 미반영 시 기존 피드 반환을 유지한다. optional 표시 조회 대기는 최대 1초다.
+앱 NoteMediaGrid의 오각형 중앙에 표시한다. 새 앱 업데이트 전에는 기존 카드가 그대로 보인다.
+
+`event.calendar`는 최대 100개 `{ id, title, startDate, endDate, description }`다. 날짜는 YYYY-MM-DD, 기간 종료는 시작 이상이다.
+`event.mapView`는 optional `{ lat, lng, level }` 또는 null이다. null/누락이면 참여 가게 평균 좌표와 레벨5를 쓴다. 레벨 범위1~14, 작을수록 확대한다.
+일정은 표시 전용이며 자동 활성화·비활성화 스케줄러는 없다. 옛 관리자 payload에서 새 필드를 생략해도 저장된 값을 보존한다.
+일정은 `[]`, 지도 시점은 `null`로 명시적으로 해제한다.
+네이티브 이벤트 지도는 현재 이벤트 API에서만 가게를 받고 별도 전체 가게 조회를 하지 않는다. 활성 상태는 60초/앱 foreground 때 재확인하고 410이면 닫는다.
+지도 HTML은 변경하지 않고 기존 UPDATE_RESTAURANTS에 필터된 목록을 전달한다. 홈을 벗어나거나 새로운 Home 가게 공유 요청이 오면 지도 모달을 닫아 기존 푸시·공유 이동을 가리지 않는다.
+
+## 목업 확인
+
+- 로컬 `npm run dev` 실행 후 `/seongbukcheon?preview=1`: 공동 순위·피드·스탬프·캘린더를 인증/API 없이 미리 본다. 브라우저에서만 허용하며 ‘목업’ 안내를 표시한다.
+- 이 query 미리보기는 코드 배포 후 `https://event-welcome.vercel.app/seongbukcheon?preview=1`에도 사용할 수 있다. 실제 앱 이동·적립은 실행하지 않는다.
+- 테스트 DB 실제 목업: 서버에서 `node -r dotenv/config -r ts-node/register scripts/seed-event-preview.ts dotenv_config_path=.env.test`.
+- 테스트 DB 전용 가드, 목업 사용자5명·기록/스탬프22개(7·7·4·3·1). 재실행은 목업 전용 UUID의 데이터만 갱신한다. 운영 DB·공개 이벤트 일정·푸시는 변경하지 않는다.
