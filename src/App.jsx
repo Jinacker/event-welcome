@@ -1,9 +1,8 @@
 import EventIcon from './components/EventIcon';
-import PullToRefresh from './components/PullToRefresh';
 import { EventRefreshContext } from './components/EventRefreshContext';
 import { createEventRefresh, singleFlight } from './lib/refresh';
 import { createEventDemo } from './lib/demo';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { createEventBridge } from './bridge/client';
 import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent } from './lib/events';
 import { eventPages } from './events';
@@ -13,8 +12,6 @@ export default function App() {
   const demo = useMemo(() => new URLSearchParams(window.location.search).get('preview') === '1' && !window.ReactNativeWebView ? createEventDemo() : null, []);
   const bridge = useMemo(() => demo?.bridge ?? createEventBridge(), [demo]);
   const eventRefresh = useMemo(() => createEventRefresh(), []);
-  const alive = useRef(true);
-  useEffect(() => { alive.current = true; return () => { alive.current = false; }; }, []);
   const readSettings = useMemo(() => singleFlight(async () => bridge.isNative ? bridge.api('/context') : { event: await loadBrowserEvent(window.location, API_ORIGIN) }), [bridge]);
   const [event, setEvent] = useState(null);
   const [context, setContext] = useState(null);
@@ -55,30 +52,17 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [event?.id, event?.enabled, native]);
 
-  const pullRefresh = async () => {
-    try {
-      const value = await readSettings();
-      if (!alive.current) return;
-      setEvent(value.event);
-      if (native) setContext((current) => ({ ...current, event: value.event, user: value.user ?? current?.user ?? null }));
-      if (value.event.enabled) await eventRefresh.run();
-    } catch (cause) {
-      if (alive.current && cause.code === '410') { setEvent((current) => ({ ...current, enabled: false })); return; }
-      throw cause;
-    }
-  };
-
   if (error) return <main className="status-page"><span className="status-mark">🥩</span><h1>잠시만 기다려주세요</h1><p role="alert">{error}</p><button onClick={() => setAttempt((value) => value + 1)}>다시 시도</button><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
   if (!event) return <main className="status-page" role="status"><span className="status-mark">🥩</span><p>이벤트를 불러오고 있어요.</p></main>;
   if (!event.enabled) return <main className="status-page"><span className="status-mark">🥩</span><h1>현재 이벤트 비활성화입니다</h1><p>잠시 후 돈가스 지도로 이동합니다.</p><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
   const Page = eventPages[event.webPath];
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
-  return <EventRefreshContext.Provider value={eventRefresh}><PullToRefresh onRefresh={pullRefresh}><main className="event-page"><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
+  return <EventRefreshContext.Provider value={eventRefresh}><main className="event-page"><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
     {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
     <button className="event-home-fab" disabled={Boolean(demo)} aria-label="돈가스 지도 홈으로" title="돈가스 지도 홈으로" onClick={openHome}>
       <EventIcon name="back" size={24} />
     </button>
-  </main></PullToRefresh></EventRefreshContext.Provider>;
+  </main></EventRefreshContext.Provider>;
 }
