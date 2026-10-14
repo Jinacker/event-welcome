@@ -70,7 +70,7 @@ export default function App() {
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
     {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
     <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo) || !native} aria-label="이벤트 닫기" title="이벤트 닫기" onClick={closeEvent}>
-      <EventIcon name="undo" size={context?.platform === 'android' ? 21 : 23} filled />
+      <EventIcon name="undo" size={context?.platform === 'android' ? 23 : 25} filled />
     </button>
   </main></EventRefreshContext.Provider>;
 }
