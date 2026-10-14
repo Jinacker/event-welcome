@@ -61,8 +61,8 @@ export default function App() {
     {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
-    <button className="event-home-fab" disabled={Boolean(demo)} aria-label="돈가스 지도 홈으로" title="돈가스 지도 홈으로" onClick={openHome}>
-      <EventIcon name="back" size={24} />
+    <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo)} aria-label="돈가스 지도 홈으로" title="돈가스 지도 홈으로" onClick={openHome}>
+      <EventIcon name="undo" size={context?.platform === 'android' ? 21 : 23} filled />
     </button>
   </main></EventRefreshContext.Provider>;
 }
