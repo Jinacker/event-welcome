@@ -4,6 +4,11 @@
     { "key": "Referrer-Policy", "value": "no-referrer" },
     { "key": "X-Frame-Options", "value": "DENY" },
     { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://storage.googleapis.com; connect-src 'self' https://storage.googleapis.com https://katsu-map-api-181871710999.asia-northeast3.run.app https://katsu-map-api-2o5vgygsra-du.a.run.app; frame-src 'none'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'" }
+  ] }, { "source": "/event-config.json", "headers": [
+    { "key": "Cache-Control", "value": "no-store, max-age=0" }
   ] }],
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "rewrites": [
+    { "source": "/event-config.json", "destination": "https://storage.googleapis.com/katsu-map-images/app-config/events.json" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

@@ -7,12 +7,11 @@ import { createEventBridge } from './bridge/client';
 import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent } from './lib/events';
 import { eventPages } from './events';
 
-const API_ORIGIN = (import.meta.env.VITE_API_URL || 'https://katsu-map-api-181871710999.asia-northeast3.run.app').replace(/\/$/, '');
 export default function App() {
   const demo = useMemo(() => new URLSearchParams(window.location.search).get('preview') === '1' && !window.ReactNativeWebView ? createEventDemo() : null, []);
   const bridge = useMemo(() => demo?.bridge ?? createEventBridge(), [demo]);
   const eventRefresh = useMemo(() => createEventRefresh(), []);
-  const readSettings = useMemo(() => singleFlight(async () => bridge.isNative ? bridge.api('/context') : { event: await loadBrowserEvent(window.location, API_ORIGIN) }), [bridge]);
+  const readSettings = useMemo(() => singleFlight(async () => bridge.isNative ? bridge.api('/context') : { event: await loadBrowserEvent(window.location) }), [bridge]);
   const [event, setEvent] = useState(null);
   const [context, setContext] = useState(null);
   const [error, setError] = useState('');
@@ -34,7 +33,7 @@ export default function App() {
     const load = async () => {
       try {
         if (native) { const value = await bridge.getContext(); if (!stopped) { setContext(value); setEvent(value.event); setError(''); } }
-        else { const value = await loadBrowserEvent(window.location, API_ORIGIN); if (!stopped) { setEvent(value); setError(''); } }
+        else { const value = await loadBrowserEvent(window.location); if (!stopped) { setEvent(value); setError(''); } }
       } catch (cause) { if (!stopped) setError(cause.message); }
     };
     setError(''); load();
