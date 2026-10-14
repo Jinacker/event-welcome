@@ -4,7 +4,7 @@ import { createEventRefresh, singleFlight } from './lib/refresh';
 import { createEventDemo } from './lib/demo';
 import React, { useEffect, useMemo, useState } from 'react';
 import { createEventBridge } from './bridge/client';
-import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent } from './lib/events';
+import { APP_HOME_LINK, appStoreUrl, inactiveRedirect, loadBrowserEvent } from './lib/events';
 import { eventPages } from './events';
 
 export default function App() {
@@ -18,6 +18,11 @@ export default function App() {
   const [attempt, setAttempt] = useState(0);
   const [closeError, setCloseError] = useState('');
   const native = bridge.isNative;
+  const storeUrl = appStoreUrl(window.navigator);
+  const handleBrowserClick = (action) => {
+    if (native || !action.target.closest?.('button, a')) return;
+    action.preventDefault(); action.stopPropagation(); window.location.assign(storeUrl);
+  };
   const openHome = () => {
     if (native) bridge.navigate('home').catch(() => { window.location.href = APP_HOME_LINK; });
     else window.location.href = APP_HOME_LINK;
@@ -52,23 +57,17 @@ export default function App() {
     if (event?.enabled !== false) return undefined;
     return inactiveRedirect({ openHome });
   }, [event?.enabled]);
-  useEffect(() => {
-    if (native || !event?.enabled || !/^\/event\//.test(window.location.pathname)) return undefined;
-    const timer = setTimeout(() => { window.location.href = appEventLink(event.id, window.location.search); }, 200);
-    return () => clearTimeout(timer);
-  }, [event?.id, event?.enabled, native]);
-
-  if (error) return <main className="status-page"><span className="status-mark">🥩</span><h1>잠시만 기다려주세요</h1><p role="alert">{error}</p><button onClick={() => setAttempt((value) => value + 1)}>다시 시도</button><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
+  if (error) return <main className="status-page"><span className="status-mark">🥩</span><h1>잠시만 기다려주세요</h1><p role="alert">{error}</p><button onClick={() => setAttempt((value) => value + 1)}>다시 시도</button><a href={native ? APP_HOME_LINK : storeUrl} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>{native ? '돈가스 지도 열기' : '돈가스 지도 다운로드'}</a></main>;
   if (!event) return <main className="status-page" role="status"><span className="status-mark">🥩</span><p>이벤트를 불러오고 있어요.</p></main>;
   if (!event.enabled) return <main className="status-page"><span className="status-mark">🥩</span><h1>현재 이벤트 비활성화입니다</h1><p>잠시 후 돈가스 지도로 이동합니다.</p><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
   const Page = eventPages[event.webPath];
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
-  return <EventRefreshContext.Provider value={eventRefresh}><main className="event-page"><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
+  return <EventRefreshContext.Provider value={eventRefresh}><main className="event-page" onClickCapture={handleBrowserClick}><header className="page-header"><span>{nickname ? `${nickname}님 환영이에요!` : '환영해요!'}</span></header>
     {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
-    {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
+    {!native && <a className="app-button" href={storeUrl}>돈가스 지도 다운로드</a>}<footer>맛있는 발견, 돈가스 지도</footer>
     {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
-    <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo) || !native} aria-label="이벤트 닫기" title="이벤트 닫기" onClick={closeEvent}>
+    <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo)} aria-label="이벤트 닫기" title="이벤트 닫기" onClick={closeEvent}>
       <EventIcon name="undo" size={context?.platform === 'android' ? 23 : 25} filled />
     </button>
   </main></EventRefreshContext.Provider>;

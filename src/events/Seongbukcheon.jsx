@@ -22,7 +22,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
     <StampTourBoard event={event} bridge={bridge} />
     <EventCalendar event={event} />
     <section className="event-course"><div className="section-heading"><h2>성북천 맛집 지도</h2><span>{event.stampTour?.restaurants?.length ?? 0}곳</span></div>
-      <button className="course-preview" aria-label="성북천 맛집 지도와 가게 목록 열기" onClick={openMap} disabled={!bridge.isNative}>
+      <button className="course-preview" aria-label="성북천 맛집 지도와 가게 목록 열기" onClick={openMap}>
         <div className="river" /><span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span><span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span><span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span><span className="course-label">참여 가게만 지도에서 보기 ↗</span>
       </button><p className="course-help">지도를 누르면 참여 가게의 위치와 가게 목록을 볼 수 있어요.</p>{error && <p role="alert" className="course-help">{error}</p>}
     </section>

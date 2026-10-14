@@ -1,5 +1,10 @@
 export const APP_HOME_LINK = 'katsumap://';
 export const CONFIG_URL = '/event-config.json';
+export const APP_STORE_URL = 'https://apps.apple.com/kr/app/%EB%8F%88%EA%B0%80%EC%8A%A4-%EC%A7%80%EB%8F%84/id6755211452';
+export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.katsumap.app';
+export function appStoreUrl({ userAgent = '', maxTouchPoints = 0 } = {}) {
+  return /iPad|iPhone|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && maxTouchPoints > 1) ? APP_STORE_URL : PLAY_STORE_URL;
+}
 const isId = (value) => Number.isInteger(value) && value > 0 && value <= 2147483647;
 export function appEventLink(id, search = '') {
   const query = new URLSearchParams();

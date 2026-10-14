@@ -37,7 +37,7 @@ export default function EventActivity({ event, bridge }) {
   return <section className="event-activity" aria-label="성북천 스탬프 랭킹과 피드">
     <div className="section-heading"><h2>성북천 스탬프 랭킹</h2><span>같은 개수는 공동 순위</span></div>
     <div className="ranking-card">
-      {!bridge.isNative ? <p className="section-empty">앱에서 참여자 랭킹과 피드를 만나보세요.</p> : ranking ? <>
+      {!bridge.isNative ? <button type="button" className="section-empty app-feature-link">앱에서 참여자 랭킹과 피드를 만나보세요. ›</button> : ranking ? <>
         {!ranking.items.length && <p className="section-empty">첫 스탬프의 주인공이 되어보세요!</p>}
         <ol className="ranking-list">{ranking.items.map((item, index) => <li key={`${item.rank}-${index}`} className={item.isMe ? 'is-me' : ''}>
           <span className={`rank-number rank-${item.rank}`}>{item.rank}</span>
@@ -51,6 +51,7 @@ export default function EventActivity({ event, bridge }) {
       {errors.ranking && <p role="alert" className="section-empty">{errors.ranking}<button onClick={() => setAttempt((n) => n + 1)}>다시 시도</button></p>}
     </div>
     <div className="section-heading feed-heading"><h2>이번 주 성북천 이야기</h2><span>스탬프를 받은 공개 기록</span></div>
+    {!bridge.isNative && <button type="button" className="section-empty app-feature-link">돈가스 지도에서 성북천 이야기 보기 ›</button>}
     {bridge.isNative && !feed && !errors.feed && <p className="section-empty" role="status">피드를 불러오고 있어요.</p>}
     {feed?.length === 0 && <p className="section-empty">이번 주 성북천 이야기를 기다리고 있어요.</p>}
     {errors.feed && <p role="alert" className="section-empty">{errors.feed}<button onClick={() => setAttempt((n) => n + 1)}>다시 시도</button></p>}

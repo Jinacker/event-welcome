@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent, resolveEventId } from './events.js';
+import { APP_HOME_LINK, appEventLink, inactiveRedirect, loadBrowserEvent, resolveEventId, appStoreUrl, APP_STORE_URL, PLAY_STORE_URL } from './events.js';
 test('NFC 링크의 검증 파라미터는 앱 진입에 보존하고 이벤트 ID·native는 제외한다', () => {
   assert.equal(appEventLink(1, '?source=nfc&code=abc&eventId=2&native=1'), 'katsumap://event/1?source=nfc&code=abc');
 });
@@ -53,4 +53,11 @@ test('알 수 없는 ID·빈 설정·잘못된 설정은 비활성으로 확정�
 });
 test('네트워크 장애는 Failed to fetch 대신 재시도 안내를 반환한다', async () => {
   await assert.rejects(loadBrowserEvent({ pathname: '/', search: '' }, async () => { throw new TypeError('Failed to fetch'); }), /이벤트 설정을 불러오지 못했어요/);
+});
+test('아이폰·아이패드는 App Store, 안드로이드·일반 PC는 Google Play로 연결한다', () => {
+  assert.equal(appStoreUrl({ userAgent: 'Mozilla iPhone' }), APP_STORE_URL);
+  assert.equal(appStoreUrl({ userAgent: 'Mozilla iPad' }), APP_STORE_URL);
+  assert.equal(appStoreUrl({ userAgent: 'Mozilla Macintosh', maxTouchPoints: 5 }), APP_STORE_URL);
+  assert.equal(appStoreUrl({ userAgent: 'Mozilla Android' }), PLAY_STORE_URL);
+  assert.equal(appStoreUrl({ userAgent: 'Mozilla Macintosh', maxTouchPoints: 0 }), PLAY_STORE_URL);
 });

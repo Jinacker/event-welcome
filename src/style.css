@@ -38,6 +38,7 @@ svg { flex-shrink: 0; }
 .hero-bottom strong { color: var(--accent); font-weight: 700; white-space: nowrap; }
 .event-activity, .event-calendar, .event-course { margin: 28px 0; }
 .section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.app-feature-link { display: block; width: 100%; border: 0; background: transparent; text-align: center; }
 .section-heading h2 { font-size: 16px; font-weight: 700; letter-spacing: -.04em; margin: 0; }
 .section-heading > span { color: var(--inactive); font-size: 10px; text-align: right; }
 .ranking-card, .calendar-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
