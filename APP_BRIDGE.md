@@ -57,7 +57,7 @@ if (current.capabilities.includes('location.get')) {
 | api(path, options) | api.request | 현재 이벤트 전용 API를 앱 인증으로 요청하고 응답 data 반환 |
 | getLocation() | location.get | 위치 권한 요청 후 `{ latitude, longitude, accuracy, timestamp }` 반환 |
 | pickImage() | image.pick | 앨범에서 사진 1장 선택 후 JPEG base64·크기 반환 |
-| navigate(target, params) | navigation.open | 지정한 앱 화면으로 이동하고 이벤트 웹뷰 닫기 |
+| navigate(target, params) | navigation.open | 지정한 앱 화면으로 이동. 최신 앱의 restaurant는 이벤트 위 상세 모달 표시 |
 | share(message) | share | 운영체제 공유창, `{ action }` 반환 |
 | haptic(style) | haptic | light / medium / heavy 진동. 기본 light |
 | close() | close | 이벤트 웹뷰 닫기 |
@@ -77,7 +77,7 @@ await bridge.share('성북천 이벤트에 함께 참여해요!');
 await bridge.haptic('light');
 ```
 
-navigate와 close는 웹뷰를 닫는다. 호출 후에도 웹 페이지가 남아서 후속 처리를 할 것으로 가정하지 않는다.
+close는 이벤트 레이어만 닫고 탭은 이동하지 않는다. navigate는 보통 이벤트를 닫고 지정한 화면으로 이동한다. 최신 앱의 restaurant 목적지는 이벤트를 유지한 채 가게 상세 모달만 위에 열며, 모달을 닫으면 보던 이벤트로 돌아온다. 구버전 앱의 restaurant는 기존 홈 지도 이동을 유지한다.
 
 ## 앱 화면 이동
 
@@ -93,7 +93,7 @@ await bridge.navigate('home');
 | --- | --- |
 | home, encyclopedia, community, tasting, settings, ranking | 없음 |
 | messages, notices, new_record | 없음 |
-| restaurant | restaurantId |
+| restaurant | restaurantId. 최신 앱은 이벤트를 유지하며 가게 상세 모달만 열기 |
 | profile | userId |
 | note | noteId |
 | encyclopedia_post | postId |
@@ -266,12 +266,12 @@ if (context.navigationTargets?.includes('event_map')) {
 - 테스트 DB 실제 목업: 서버에서 `node -r dotenv/config -r ts-node/register scripts/seed-event-preview.ts dotenv_config_path=.env.test`.
 - 테스트 DB 전용 가드, 목업 사용자5명·기록/스탬프22개(7·7·4·3·1). 재실행은 목업 전용 UUID의 데이터만 갱신한다. 운영 DB·공개 이벤트 일정·푸시는 변경하지 않는다.
 
-## 이벤트 화면에서 홈으로 이동
+## 이벤트 화면 닫기
 
-활성 이벤트 화면의 우측 하단 고정 뒤로가기 버튼은 이전 웹 페이지가 아니라 돈가스 지도 **홈**으로 이동한다.
-앱 즐겨찾기 지도와 같은 흰 원형·그림자·Material Design Icons arrow-u-left-top을 사용한다. 크기는 iOS44px/Android40px이며 context.platform으로 구분한다.
-앱에서는 기존 `bridge.navigate('home')`을 사용한다. 일반 브라우저와 브리지 실패 시 기존 `katsumap://` 홈 링크를 사용한다.
-새 브리지 기능이나 인증 정보는 추가하지 않는다. 목업 미리보기에서는 이 버튼을 비활성화해 실제 앱 이동을 실행하지 않는다.
+활성 이벤트 화면의 우측 하단 뒤로가기 버튼은 기존 `bridge.close()`로 **이벤트 레이어만 닫는다**. 홈 이동은 하지 않으며 커뮤니티 탭이 그대로 남는다.
+앱 즐겨찾기 지도의 원형·그림자·Material Design Icons arrow-u-left-top을 사용하고, 배경은 앱 키 컬러(#d6483e), 화살표는 흰색이다.
+크기는 iOS44px/Android40px이며 context.platform으로 구분한다. 목업·일반 브라우저에서는 실제 레이어를 닫을 수 없어 버튼을 비활성화한다.
+브리지 닫기 실패는 오류를 표시하고 이벤트에 머문다. 비활성 안내 후 2초 자동 홈 이동과 오류 화면의 앱 열기 링크는 기존 정책을 유지한다.
 
 성북천 피드 카드는 앱 HotFeedCard처럼 사진과 가게·별점·후기를 좌우로 배치하고 작성자·상대 시간·좋아요·댓글을 표시한다.
 TOP10 중 랜덤4개 선택, 기록 상세 이동과 랭킹·스탬프의 주기적 조회는 유지한다.
@@ -282,7 +282,7 @@ TOP10 중 랜덤4개 선택, 기록 상세 이동과 랭킹·스탬프의 주기
 앱의 홈 이벤트 버튼, 커뮤니티 기록 버튼 위의 이벤트 이미지 버튼, 이벤트 딥링크와 배너는 모두 커뮤니티 탭으로 이동한 뒤 이벤트 웹을 표시한다.
 웹은 커뮤니티 위 레이어에서 열리며 하단 탭바를 덮지 않는다. 상단 네이티브 헤더는 가운데 정렬한 `이벤트`만 표시하고 닫기 버튼은 표시하지 않는다.
 Android 뒤로가기나 기존 bridge.close()는 이벤트만 닫아 커뮤니티를 보여준다.
-다른 탭을 선택하면 이벤트 레이어도 닫힌다. 웹의 홈 버튼은 기존 home 브리지로 홈 탭을 연다.
+다른 탭을 선택하면 이벤트 레이어도 닫힌다. 웹의 우측 하단 버튼은 close 브리지로 레이어만 닫는다.
 이 진입 방식과 탭바 유지에는 앱 업데이트가 필요하며 구버전 앱의 브리지 계약은 유지한다.
 
 사용자 요청으로 당겨서 새로고침 제스처와 상단 로딩 표시는 제거했다. 웹 배포로 반영되며 새 앱 기능을 요구하지 않는다.
@@ -291,3 +291,12 @@ Android 뒤로가기나 기존 bridge.close()는 이벤트만 닫아 커뮤니�
 조회 실패를 비활성이나 0개 적립으로 확정하지 않는다. 비활성410은 기존 안내·2초 후 앱 홈 이동으로 처리한다.
 개별 로더의 singleFlight 중복 요청 방지도 유지한다.
 현재 캘린더는 일정이 걸치는 달만 넘길 수 있으며 기간을 주 단위 막대로 표시한다. 막대 안에 제목을 넣고 겹치는 일정은 줄을 나눈다.
+
+
+## 이벤트 참여 가게 상세와 피드 스탬프
+
+참여 가게 버튼은 기존 `bridge.navigate('restaurant', { restaurantId })`를 사용한다. 최신 앱은 기존 캐시 조회로 가게를 읽은 뒤 커뮤니티의 RestaurantDialog를 이벤트 위에 표시한다.
+가게를 닫으면 이벤트의 스크롤·조회 데이터가 남는다. 상세의 지도 보기 버튼을 선택해야 홈 지도로 이동한다. 즐겨찾기와 기록·공유 등 기존 상세 기능을 재사용한다.
+가게 조회 실패는 이벤트를 유지하며 안전한 오류를 웹에 반환한다. 조회 중 이벤트가 닫히거나 교체되면 늦은 응답으로 모달을 열지 않는다.
+이 동작에는 앱 업데이트가 필요하며 구버전 앱은 같은 restaurant 목적지에서 기존 홈 지도로 이동한다. 새 target·method·서버 API는 추가하지 않는다.
+앱 피드·프로필·댓글 기록의 이벤트 스탬프는 오각형 중앙 대신 작성자 줄 우측 상단에 표시한다. 비활성 이벤트 배지 보존과 서버 전달 형식은 유지한다.

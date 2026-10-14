@@ -17,10 +17,17 @@ export default function App() {
   const [context, setContext] = useState(null);
   const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
+  const [closeError, setCloseError] = useState('');
   const native = bridge.isNative;
   const openHome = () => {
     if (native) bridge.navigate('home').catch(() => { window.location.href = APP_HOME_LINK; });
     else window.location.href = APP_HOME_LINK;
+  };
+  const closeEvent = async () => {
+    setCloseError('');
+    if (!native) { setCloseError('앱에서 이벤트를 닫을 수 있어요.'); return; }
+    try { await bridge.close(); }
+    catch { setCloseError('이벤트를 닫지 못했어요. 다시 시도해주세요.'); }
   };
   useEffect(() => {
     let stopped = false;
@@ -61,7 +68,8 @@ export default function App() {
     {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={appEventLink(event.id, window.location.search)}>돈가스 지도에서 이벤트 열기</a>}<footer>맛있는 발견, 돈가스 지도</footer>
-    <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo)} aria-label="돈가스 지도 홈으로" title="돈가스 지도 홈으로" onClick={openHome}>
+    {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
+    <button className="event-home-fab" data-platform={context?.platform} disabled={Boolean(demo) || !native} aria-label="이벤트 닫기" title="이벤트 닫기" onClick={closeEvent}>
       <EventIcon name="undo" size={context?.platform === 'android' ? 21 : 23} filled />
     </button>
   </main></EventRefreshContext.Provider>;
