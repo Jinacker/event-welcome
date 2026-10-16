@@ -58,7 +58,7 @@ export default function App() {
     return inactiveRedirect({ openHome });
   }, [event?.enabled]);
   if (error) return <main className="status-page"><span className="status-mark">🥩</span><h1>잠시만 기다려주세요</h1><p role="alert">{error}</p><button onClick={() => setAttempt((value) => value + 1)}>다시 시도</button><a href={native ? APP_HOME_LINK : storeUrl} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>{native ? '돈가스 지도 열기' : '돈가스 지도 다운로드'}</a></main>;
-  if (!event) return <main className="status-page" role="status"><span className="status-mark">🥩</span><p>이벤트를 불러오고 있어요.</p></main>;
+  if (!event) return <main className="status-page" role="status"><span className="status-spinner" aria-hidden="true" /><p>이벤트를 불러오고 있어요.</p></main>;
   if (!event.enabled) return <main className="status-page"><span className="status-mark">🥩</span><h1>현재 이벤트 비활성화입니다</h1><p>잠시 후 돈가스 지도로 이동합니다.</p><a href={APP_HOME_LINK} onClick={native ? (e) => { e.preventDefault(); openHome(); } : undefined}>돈가스 지도 열기</a></main>;
   const Page = eventPages[event.webPath];
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';

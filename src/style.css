@@ -139,6 +139,9 @@ svg { flex-shrink: 0; }
 .status-page h1 { font-size: 23px; letter-spacing: -.04em; }
 .status-page p { font-size: 13px; color: var(--muted); line-height: 1.8; }
 .status-mark { font-size: 40px; }
+.status-spinner { width: 34px; height: 34px; margin-bottom: 14px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: status-spin .8s linear infinite; }
+@keyframes status-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .status-spinner { animation-duration: 2.4s; } }
 .status-page a, .status-page button { width: 100%; max-width: 300px; }
 .status-page button { background: var(--text); }
 footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--inactive); letter-spacing: .04em; }
