@@ -12,20 +12,20 @@ import { GoodsDialog, PolicyDialog, RewardsDialog, ScheduleDialog } from '../com
 import { giftshopNote } from '../lib/goods';
 import { calendarPeriod, longPeriodLabel } from '../lib/period';
 import * as content from './seongbukcheonContent';
+import { scheduleItems } from './seongbukcheonSchedule';
 
 const lines = (values) => values.map((line, index) => <React.Fragment key={line}>{index ? <br /> : null}{line}</React.Fragment>);
 
-export default function Seongbukcheon({ event, bridge, context }) {
+export default function Seongbukcheon({ event, bridge, context, navigation, navigationState }) {
   const [error, setError] = useState('');
-  const [page, setPage] = useState(null);
-  const [dialog, setDialog] = useState(null);
+  const { page, dialog } = navigationState;
   const scroll = useRef(0);
   const stamp = useStampProgress(event, bridge);
   const goal = content.stampSection.goal;
-  const period = calendarPeriod(event.calendar);
+  const period = calendarPeriod(scheduleItems);
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
-  const openPage = (name) => { scroll.current = window.scrollY; setPage(name); };
-  const closePage = () => setPage(null);
+  const openPage = (name) => { scroll.current = window.scrollY; navigation.openPage(name); };
+  const closePage = () => navigation.back();
   // 서브 화면을 열면 맨 위에서 시작하고, 돌아오면 보던 위치로 되돌린다.
   useLayoutEffect(() => { window.scrollTo(0, page ? 0 : scroll.current); }, [page]);
   const openMap = async () => {
@@ -33,8 +33,8 @@ export default function Seongbukcheon({ event, bridge, context }) {
     try { await bridge.navigate('event_map', { eventId: event.id }); }
     catch { setError('지도를 열지 못했어요. 다시 시도해주세요.'); }
   };
-  const closeDialog = () => setDialog(null);
-  const openGoods = (item) => setDialog({ kind: 'goods', item });
+  const closeDialog = () => navigation.back();
+  const openGoods = (item) => navigation.openDialog({ kind: 'goods', item });
   const dialogs = <>
     {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
     {dialog?.kind === 'rewards' && <RewardsDialog onClose={closeDialog} />}
@@ -76,10 +76,10 @@ export default function Seongbukcheon({ event, bridge, context }) {
     </section>
     <StampTourBoard event={event} bridge={bridge} goal={goal} stamp={stamp} nickname={nickname}
       onOpenRanking={() => openPage('ranking')} onOpenStores={() => openPage('stores')}
-      onOpenRewards={() => setDialog({ kind: 'rewards' })} onOpenPolicy={() => setDialog({ kind: 'policy' })} />
+      onOpenRewards={() => navigation.openDialog({ kind: 'rewards' })} onOpenPolicy={() => navigation.openDialog({ kind: 'policy' })} />
     <EventActivity event={event} bridge={bridge} />
-    <EventCalendar event={event} heading={content.schedule.heading} period={period?.label} closure={content.closure}
-      onSelect={(item) => setDialog({ kind: 'schedule', item })} />
+    <EventCalendar heading={content.schedule.heading} period={period?.label}
+      onSelect={(item) => navigation.openDialog({ kind: 'schedule', item })} />
     <EventGiftshop event={event} onOpenPage={() => openPage('goods')} onSelect={openGoods} bridge={bridge} />
     <footer className="brand-footer"><p>{content.footer.copy}</p><strong>{content.footer.brand}</strong></footer>
     {dialogs}

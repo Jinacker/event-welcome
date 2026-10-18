@@ -7,7 +7,8 @@ const lines = (values) => values.map((line, index) => <React.Fragment key={line}
 
 // 이벤트 웹에서 열리는 안내 창들. 일정 상세·럭키드로우 선물·참여 방법·굿즈 사진.
 export function ScheduleDialog({ item, native, onClose }) {
-  const detail = content.scheduleDetails[item.title];
+  const detail = item;
+  const lists = [{ heading: '전시 콘텐츠', items: item.contents }, { heading: '기프트숍', items: item.giftshop }].filter((list) => list.items);
   const description = detail ? (detail.description ?? (item.description ?? '').trim()) : '';
   return <EventDialog title={item.title} onClose={onClose}>
     <div className="event-dialog-content"><article className="event-dialog-item">
@@ -29,7 +30,7 @@ export function ScheduleDialog({ item, native, onClose }) {
       </div> : <div className="event-dialog-info"><p>{(item.description ?? '').trim() || content.schedulePending}</p></div>}
       {description && <p className="event-program-description">{description}</p>}
       {detail?.gift && <p className="event-program-gift">{detail.gift}</p>}
-      {detail?.lists?.map((list) => <section className="event-dialog-list" key={list.heading}>
+      {lists.map((list) => <section className="event-dialog-list" key={list.heading}>
         <h3>{list.heading}</h3>
         <ul>{list.items.map((entry) => <li key={entry}>{entry}</li>)}</ul>
       </section>)}

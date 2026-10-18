@@ -1,5 +1,5 @@
 // 성북천 '걸어서 돈가스 속으로' 이벤트 웹의 고정 문구.
-// 일정·굿즈·방문 수는 서버 설정을 사용하고, 성북천 완주 기준은 10개로 고정한다.
+// 일정·팝업·완주 기준은 웹에 고정하고, 굿즈·방문 수는 서버 설정을 사용한다.
 
 export const banner = {
   collaboration: '돌고돌아성북천 × 카츠헌터',
@@ -48,7 +48,7 @@ export const rewards = {
   notes: [
     { text: '상품별 남은 수량입니다.' },
     { heading: '추첨 방법', text: '라운지 돌돌에서 앱의 스탬프 적립 내역 확인 후 추첨합니다.' },
-    { heading: '수령 방법', text: '이벤트 기간 내 라운지 돌돌을 방문해 수령해 주세요.' },
+    { heading: '수령 방법', text: '11월 29일까지 라운지 돌돌을 방문해 수령해 주세요.' },
   ],
 };
 
@@ -60,7 +60,7 @@ export const policy = {
   ],
   heading: '어떻게 받나요?',
   summary: (stores, goal) => [`지도에 소개한 가게는 총 ${stores}곳입니다.`, `서로 다른 가게 ${goal}곳의 방문 기록을 앱에 남기면 완주합니다.`],
-  existing: ['지도에 소개된 가게의 방문 기록을 앱에 공개로 남겨주세요.', '사진 1장 이상·후기 30자 이상이면 앱에서 가게별 스탬프 1개가 적립돼요.'],
+  existing: ['지도에 소개된 가게의 방문 기록을 앱에 공개로 남겨주세요.'],
   standard: '사진 1장 이상·후기 30자 이상·공개 기록이 스탬프 인정 기준입니다.',
   items: (goal, period) => [
     { term: '같은 가게에서 여러 번 받기', description: `같은 가게는 1회만 인정됩니다. 서로 다른 가게 ${goal}곳의 스탬프를 모아주세요.` },
@@ -70,7 +70,7 @@ export const policy = {
     { term: '럭키드로우 추첨권', description: '스탬프 3개 달성 시 1장, 7개 달성 시 2장 추가, 10개 달성 시 2장 추가로 총 5장을 드립니다.' },
     { term: '완주 선착순 선물', description: '스탬프 10개 완주 후 라운지돌돌을 방문한 순서대로 선착순 3명에게 티셔츠를 추가로 드립니다.' },
     { term: '추첨 방법', description: '라운지 돌돌에서 앱의 스탬프 적립 내역 확인 후 추첨합니다.' },
-    { term: '수령 방법', description: '이벤트 기간 내 라운지 돌돌을 방문해 수령해 주세요.' },
+    { term: '수령 방법', description: '11월 29일까지 라운지 돌돌을 방문해 수령해 주세요.' },
   ],
 };
 
@@ -84,7 +84,7 @@ export const rankingPage = { title: '스탬프 랭킹', heading: '성북천 스�
 
 export const giftshopPage = { title: '기프트숍' };
 
-export const activity = { heading: '성북천에서 먹었어요', note: '스탬프를 받은 공개 기록' };
+export const activity = { heading: '성북천에서 먹었어요' };
 
 export const schedule = { heading: '행사 안내' };
 
@@ -94,27 +94,3 @@ export const closure = { weekday: 1, label: '휴무', title: '라운지돌돌 �
 export const footer = { copy: '돈가스에 진심인 당신을 위한 단 하나의 지도', brand: '돈가스지도' };
 
 export const schedulePending = '시간·장소·상세 안내는 추후 등록됩니다.';
-
-// 일정 상세 창에 붙는 안내. 관리자가 등록한 일정 제목과 같은 키만 연결되고, 없으면 일정 설명을 그대로 보여준다.
-export const scheduleDetails = {
-  '성북천 걸어서 돈가스 속으로 전시': {
-    venue: '라운지돌돌', address: '서울 성북구 성북로 62 2층', hours: '11:00–19:00', closed: '매주 월요일 휴무',
-    lists: [
-      { heading: '전시 콘텐츠', items: ['성북천 돈가스 지도 대공개 · 무료 배포', '카츠헌터 돈가스 덕질 애장품 전시', '돈가스 추억 게시판 운영'] },
-      { heading: '기프트숍', items: ['돈가스 덕후를 위한 티셔츠·핀버튼 등 MD', '성북천 돈가스지도 NFC 키링', '카츠헌터 Pick 돈가스템 · 전국돈가스지도 등'] },
-    ],
-  },
-  '돈가스 산책상담소': {
-    program: '돈가스산책상담소 by 카츠헌터', programAddress: '라운지돌돌 · 서울 성북구 성북로 62 2층', schedule: '10.23(금)–24(토) 11:00–19:00',
-    description: '성북천을 산책하며 가볼 만한 돈가스 집을 소개해드립니다. 평소 어떤 스타일의 돈가스를 좋아하는지 이야기를 나누고, 취향에 맞는 돈가스집부터 미처 몰랐던 동네의 돈가스 이야기까지 함께 추천해드립니다.',
-    gift: '상담하시면 무료 스티커를 나눠드립니다.',
-  },
-  '호푸집 팝업': {
-    program: '돌돌호푸카츠산도', programAddress: '서울 성북구 성북로14길 7', partner: '@hopuzip', partnerUrl: 'https://www.instagram.com/hopuzip/', schedule: '10.25(일) · 시간 추후 공지',
-    description: '돌돌호푸 시즌3, 이번에는 호푸집의 시그니처 안주 돈가스를 산도로 재해석합니다. 날씨 좋은 가을날의 오후, 한 손에 카츠산도 한 손에 맥주 들고 성북동 산책 어떠세요?',
-  },
-  '카츠벨 팝업': {
-    program: '돈가스 타코 팝업', programAddress: '서울 성북구 성북로 31 지상1층', partner: '@katsubell_', partnerUrl: 'https://www.instagram.com/katsubell_/', schedule: '10.31(토) · 시간 추후 공지',
-    description: '성북동에 어느 날 등장한 일식 카츠 강자 카츠벨. 바삭하고 부드러운 안심카츠를 타코에 넣고 육즙 가득한 가라아게와 함께 내어드립니다.',
-  },
-};
