@@ -427,6 +427,11 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-reward-intro>.stamp-prize-copy{color:var(--accent);}.stamp-prize-copy strong{font-weight:800;}
 
 .stamp-reward-intro>.stamp-prize-copy{font-weight:800;}
+/* 선물 안내가 섹션 첫 줄로 올라오고, 내 스탬프 제목은 집계 바로 위에 붙는다. */
+.stamp-tour>.stamp-reward-intro:first-child{margin-top:0;}
+.stamp-reward-intro+.stamp-tour-heading{margin-top:18px;}
+.stamp-reward-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.stamp-reward-head h3{min-width:0;}
 .hot-feed-username{font-size:12px;font-weight:700;max-width:110px;line-height:1.5;}
 .hot-feed-author>img,.hot-feed-avatar{width:22px;height:22px;}
 .hot-feed-author{gap:6px;flex-wrap:wrap;}

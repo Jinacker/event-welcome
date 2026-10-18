@@ -21,14 +21,16 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
       : <span>{index + 1}</span>}
   </div>;
   return <section className="stamp-tour" aria-label="스탬프 투어" data-browser-ok>
-    <div className="stamp-tour-heading">
-      <h2>{nickname ? `${nickname}님의 스탬프` : '내 스탬프'}</h2>
-      <button type="button" className="stamp-ranking-link" onClick={onOpenRanking}>랭킹</button>
-    </div>
     <div className="stamp-reward-intro">
-      <h3>{stampSection.rewardTitle}</h3>
+      <div className="stamp-reward-head">
+        <h3>{stampSection.rewardTitle}</h3>
+        <button type="button" className="stamp-ranking-link" onClick={onOpenRanking}>랭킹</button>
+      </div>
       <p className="stamp-prize-copy">{stampSection.prize}</p>
       <p>{stampSection.guide(board.length)}</p>
+    </div>
+    <div className="stamp-tour-heading">
+      <h2>{nickname ? `${nickname}님의 스탬프` : '내 스탬프'}</h2>
     </div>
     <div className="stamp-summary">
       <div><p>현재 모은 스탬프</p><strong>{progress ? earned : '—'} <small>/ {board.length}</small></strong></div>
