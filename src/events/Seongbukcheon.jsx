@@ -9,7 +9,6 @@ import EventGiftshop from '../components/EventGiftshop';
 import GiftshopPage from '../components/GiftshopPage';
 import { useStampProgress } from '../components/useStampProgress';
 import { GoodsDialog, PolicyDialog, RewardsDialog, ScheduleDialog } from '../components/EventDialogs';
-import { stampGoal } from '../lib/stamps';
 import { giftshopNote } from '../lib/goods';
 import { calendarPeriod, longPeriodLabel } from '../lib/period';
 import * as content from './seongbukcheonContent';
@@ -22,7 +21,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
   const [dialog, setDialog] = useState(null);
   const scroll = useRef(0);
   const stamp = useStampProgress(event, bridge);
-  const goal = stampGoal(event);
+  const goal = content.stampSection.goal;
   const period = calendarPeriod(event.calendar);
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
   const openPage = (name) => { scroll.current = window.scrollY; setPage(name); };

@@ -10,7 +10,7 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
   const tour = event.stampTour;
   if (!tour?.enabled) return null;
   const { progress, error, loading, refresh } = stamp;
-  const earned = progress?.earned ?? 0;
+  const earned = Math.min(goal, progress?.earned ?? 0);
   const board = stampBoard(goal, earned, stampSection.milestones);
   const total = Math.max(1, board.length);
   const remaining = Math.max(0, board.length - earned);
