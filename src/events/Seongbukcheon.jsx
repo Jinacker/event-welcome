@@ -77,13 +77,16 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     <section className="event-course">
       <div className="section-heading"><h2>{content.mapSection.heading}</h2></div>
       <p className="map-intro-copy">{lines(content.mapSection.intro)}</p>
-      <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
-        <div className="river" />
-        <span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span>
-        <span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span>
-        <span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span>
-        <span className="course-label">{content.mapSection.label}</span>
-      </button>
+      <div className="course-preview-wrap">
+        <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
+          <div className="river" />
+          <span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span>
+          <span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span>
+          <span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span>
+          <span className="course-label">{content.mapSection.label}</span>
+        </button>
+        <img className="course-hiker" src="/course-hiker.png" alt="" aria-hidden="true" />
+      </div>
       {error && <p role="alert" className="map-editorial-note">{error}</p>}
     </section>
     <StampTourBoard event={event} bridge={bridge} goal={goal} stamp={stamp} nickname={nickname}
