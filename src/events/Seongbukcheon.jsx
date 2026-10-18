@@ -61,8 +61,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
             <img className="banner-partner-seongbukcheon" src="/seongbukcheon-partner-logo-white.png" alt="돌고돌아 성북천" />
             <img className="banner-partner-cross" src="/partner-cross.png" alt="" aria-hidden="true" width="120" height="120" />
             <div className="banner-partner-hunter">
-              <img src="/katsu-hunter-emblem.png" alt="" />
-              <span>카츠헌터</span>
+              <img src="/katsu-hunter-emblem.png" alt="카츠헌터" />
             </div>
           </div>
           <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
