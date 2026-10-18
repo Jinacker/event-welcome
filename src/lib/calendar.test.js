@@ -17,7 +17,8 @@ test('핫 피드는 원본을 보존하고 TOP10에서만 랜덤4개를 반응 �
 test('목업은 API·인증 없이 랭킹 공동순위·실제와 구분된 일정·스탬프를 제공한다', async () => {
   const demo = createEventDemo();
   assert.deepEqual((await demo.bridge.api('/ranking')).items.map((item) => item.rank), [1, 1, 3, 4]);
-  assert.equal((await demo.bridge.api('/stamps')).earned, 3); assert.equal(demo.event.calendar.length, 2);
+  assert.equal((await demo.bridge.api('/stamps')).earned, 3); assert.equal(demo.event.calendar.length, 4);
+  assert.equal(demo.event.giftshop.items.length, 6); assert.ok(demo.event.giftshop.items.every((item) => item.name.startsWith('[목업]')));
   assert.match(demo.event.publicData.description, /목업/); await assert.rejects(demo.bridge.navigate('event_map'), /목업/);
 });
 

@@ -1,65 +1,57 @@
-import { useEventRefresh } from './EventRefreshContext';
-import { singleFlight } from '../lib/refresh';
-import React, { useEffect, useRef, useState } from 'react';
-import { stampSlots } from '../lib/stamps';
+import React from 'react';
+import { stampBoard } from '../lib/stamps';
 import { appStoreUrl } from '../lib/events';
+import { stampSection } from '../events/seongbukcheonContent';
 
-export default function StampTourBoard({ event, bridge }) {
+// 도장이 똑같이 찍히지 않도록 칸마다 기울기를 조금씩 다르게 준다.
+const ANGLES = [-7, -4, -10, -6, -9, -3, -8, -5, -11, -6];
+
+export default function StampTourBoard({ event, bridge, goal, stamp, nickname, onOpenRanking, onOpenStores, onOpenRewards, onOpenPolicy }) {
   const tour = event.stampTour;
-  const eventRefresh = useEventRefresh();
-  const reloadRef = useRef(async () => {});
-  const [progress, setProgress] = useState(null);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const refresh = async () => {
-    if (!bridge.isNative) return;
-    setLoading(true);
-    try { await reloadRef.current(); }
-    catch { setError('스탬프를 불러오지 못했어요. 다시 시도해주세요.'); }
-    finally { setLoading(false); }
-  };
-  useEffect(() => {
-    setProgress(null);
-    if (!tour?.enabled) return;
-    let cancelled = false;
-    const load = singleFlight(async () => {
-      if (!bridge.isNative) return;
-      try { const result = await bridge.api('/stamps'); if (!cancelled) { setProgress(result); setError(''); } }
-      catch (cause) { if (!cancelled) setError('스탬프를 불러오지 못했어요. 다시 시도해주세요.'); throw cause; }
-    });
-    reloadRef.current = load;
-    const unregister = eventRefresh.register(load);
-    const reload = () => { load().catch(() => {}); };
-    reload();
-    const interval = setInterval(reload, 60000);
-    const onVisible = () => { if (document.visibilityState === 'visible') reload(); };
-    document.addEventListener('visibilitychange', onVisible);
-    return () => { cancelled = true; unregister(); clearInterval(interval); document.removeEventListener('visibilitychange', onVisible); };
-  }, [event.id, tour?.enabled, bridge, eventRefresh]);
   if (!tour?.enabled) return null;
-  const restaurants = tour.restaurants ?? [];
+  const { progress, error, loading, refresh } = stamp;
   const earned = progress?.earned ?? 0;
-  const slots = stampSlots(restaurants.length, earned);
-  const received = new Set(progress?.stamps?.map((stamp) => stamp.restaurantId) ?? []);
-  const Slot = bridge.isNative ? 'div' : 'button';
-  return <section className="stamp-tour" aria-label="스탬프 투어">
-    <div className="stamp-summary"><div><strong>{progress ? earned : '—'} / {slots.length}</strong><p>현재 모은 스탬프</p></div><span>{progress ? `완주까지 ${Math.max(0, restaurants.length - earned)}곳` : '내 스탬프'}</span></div>
-    <div className="stamp-progress" role="progressbar" aria-label="스탬프 진행률" aria-valuemin={0} aria-valuemax={Math.max(1, slots.length)} aria-valuenow={earned}>
-      <span style={{ width: `${Math.min(100, earned / Math.max(1, slots.length) * 100)}%` }} />
+  const board = stampBoard(goal, earned, stampSection.milestones);
+  const total = Math.max(1, board.length);
+  const remaining = Math.max(0, board.length - earned);
+  const slot = ({ index, filled }) => <div key={index} className={`stamp-slot ${filled ? 'filled' : ''}`.trim()}
+    aria-label={`${index + 1}번째 ${filled ? '획득' : '빈'} 스탬프`} style={filled ? { '--stamp-angle': `${ANGLES[index % ANGLES.length]}deg` } : undefined}>
+    {filled
+      ? <span className="earned-stamp-mark" role="img" aria-label={`${stampSection.mark.join(' ')} 도장`}>{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>
+      : <span>{index + 1}</span>}
+  </div>;
+  return <section className="stamp-tour" aria-label="스탬프 투어" data-browser-ok>
+    <div className="stamp-tour-heading">
+      <h2>{nickname ? `${nickname}님의 스탬프` : '내 스탬프'}</h2>
+      <button type="button" className="stamp-ranking-link" onClick={onOpenRanking}>랭킹</button>
     </div>
-    <p className="stamp-guide">참여 가게에 새 공개 기록을 남겨주세요.<br />사진 1장 이상·후기 30자 이상이면 가게별 스탬프 1장을 받아요.</p>
+    <div className="stamp-reward-intro">
+      <h3>{stampSection.rewardTitle}</h3>
+      <p className="stamp-prize-copy">{stampSection.prize}</p>
+      <p>{stampSection.guide(board.length)}</p>
+    </div>
+    <div className="stamp-summary">
+      <div><p>현재 모은 스탬프</p><strong>{progress ? earned : '—'} <small>/ {board.length}</small></strong></div>
+      <button type="button" className="stamp-remaining-button" onClick={onOpenStores}
+        aria-label={progress ? `완주까지 ${remaining}곳, 가게별 스탬프 획득 현황 보기` : '가게별 스탬프 획득 현황 보기'}>
+        {progress ? (remaining ? `완주까지 ${remaining}곳` : '완주 완료!') : '가게별 현황'}
+      </button>
+    </div>
+    <div className="stamp-progress" role="progressbar" aria-label="스탬프 진행률" aria-valuemin={0} aria-valuemax={total} aria-valuenow={earned}>
+      <span style={{ width: `${Math.min(100, earned / total * 100)}%` }} />
+    </div>
     {!bridge.isNative && <a className="app-button" href={appStoreUrl(window.navigator)}>앱에서 내 스탬프 보기</a>}
     {bridge.isNative && !progress && !error && <p role="status">스탬프를 불러오는 중...</p>}
     {error && <div role="alert"><p>{error}</p><button onClick={refresh} disabled={loading}>다시 시도</button></div>}
     <div className="stamp-grid" aria-label={`스탬프 ${earned}개`}>
-      {slots.map((filled, index) => <Slot key={index} className={`stamp-slot ${filled ? 'filled' : ''}`} aria-label={`${index + 1}번째 ${filled ? '획득' : '빈'} 스탬프`}>
-        {filled ? <img src={tour.stampImageUrl} alt="획득한 스탬프" /> : <span>{index + 1}</span>}
-      </Slot>)}
+      {board.map((item) => item.label
+        ? <div className="stamp-milestone" key={item.index}>{slot(item)}<small>{item.label}</small></div>
+        : slot(item))}
     </div>
-    <h2>참여 가게 <small>{restaurants.length}곳</small></h2>
-    <div className="stamp-restaurants">{restaurants.map((restaurant) => <button key={restaurant.id}
-      onClick={() => bridge.navigate('restaurant', { restaurantId: restaurant.id }).catch(() => setError('가게 화면을 열지 못했어요. 다시 시도해주세요.'))}>
-      <span>{restaurant.name}</span><small>{received.has(restaurant.id) ? '획득 ✓' : '미획득'}</small>
-    </button>)}</div>
+    <p className="stamp-early-note">{stampSection.earlyNote}</p>
+    <div className="stamp-secondary-actions">
+      <button type="button" onClick={onOpenRewards}>선물 안내</button>
+      <button type="button" onClick={onOpenPolicy}>참여 방법</button>
+    </div>
   </section>;
 }

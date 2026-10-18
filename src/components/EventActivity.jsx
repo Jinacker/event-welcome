@@ -4,12 +4,12 @@ import { useEventRefresh } from './EventRefreshContext';
 import { singleFlight } from '../lib/refresh';
 import React, { useEffect, useState } from 'react';
 import { selectHotFeedCards } from '../lib/hotFeedSelection';
+import { activity } from '../events/seongbukcheonContent';
 
 export default function EventActivity({ event, bridge }) {
   const eventRefresh = useEventRefresh();
-  const [ranking, setRanking] = useState(null);
   const [feed, setFeed] = useState(null);
-  const [errors, setErrors] = useState({});
+  const [error, setError] = useState('');
   const [attempt, setAttempt] = useState(0);
   const [page, setPage] = useState(0);
   const [navigationError, setNavigationError] = useState('');
@@ -17,13 +17,8 @@ export default function EventActivity({ event, bridge }) {
     let stopped = false;
     const load = singleFlight(async () => {
       if (!bridge.isNative) return;
-      const results = await Promise.allSettled([bridge.api('/ranking'), bridge.api('/feed')]);
-      if (stopped) return;
-      const next = {};
-      if (results[0].status === 'fulfilled') setRanking(results[0].value); else next.ranking = '랭킹을 불러오지 못했어요.';
-      if (results[1].status === 'fulfilled') { setFeed(selectHotFeedCards(results[1].value.items)); setPage(0); } else next.feed = '피드를 불러오지 못했어요.';
-      setErrors(next);
-      if (Object.keys(next).length) throw new Error('Event activity refresh failed');
+      try { const result = await bridge.api('/feed'); if (!stopped) { setFeed(selectHotFeedCards(result.items)); setPage(0); setError(''); } }
+      catch (cause) { if (!stopped) setError('피드를 불러오지 못했어요.'); throw cause; }
     });
     const unregister = eventRefresh.register(load);
     const reload = () => { load().catch(() => {}); };
@@ -34,27 +29,12 @@ export default function EventActivity({ event, bridge }) {
     return () => { stopped = true; unregister(); clearInterval(timer); document.removeEventListener('visibilitychange', visible); };
   }, [event.id, bridge, attempt, eventRefresh]);
   const navigate = (target, params) => bridge.navigate(target, params).catch(() => setNavigationError('화면을 열지 못했어요. 다시 시도해주세요.'));
-  return <section className="event-activity" aria-label="성북천 스탬프 랭킹과 피드">
-    <div className="section-heading"><h2>성북천 스탬프 랭킹</h2><span>같은 개수는 공동 순위</span></div>
-    <div className="ranking-card">
-      {!bridge.isNative ? <button type="button" className="section-empty app-feature-link">앱에서 참여자 랭킹과 피드를 만나보세요. ›</button> : ranking ? <>
-        {!ranking.items.length && <p className="section-empty">첫 스탬프의 주인공이 되어보세요!</p>}
-        <ol className="ranking-list">{ranking.items.map((item, index) => <li key={`${item.rank}-${index}`} className={item.isMe ? 'is-me' : ''}>
-          <span className={`rank-number rank-${item.rank}`}>{item.rank}</span>
-          <button className="rank-person" disabled={!item.userId || !item.isProfilePublic || !bridge.isNative} onClick={() => navigate('profile', { userId: item.userId })}>
-            {item.profilePhotoUrl ? <img src={item.profilePhotoUrl} alt="" /> : <span className="avatar-placeholder"><EventIcon name="user" size={17} filled /></span>}
-            <strong>{item.nickname}{item.isMe && <small>나</small>}</strong>
-          </button><span className="rank-count">{item.stampCount}<small>개</small></span>
-        </li>)}</ol>
-        {ranking.me && !ranking.items.some((item) => item.isMe) && <p className="my-rank">내 순위 {ranking.me.rank}위 · 스탬프 {ranking.me.stampCount}개</p>}
-      </> : !errors.ranking && <p className="section-empty" role="status">랭킹을 불러오고 있어요.</p>}
-      {errors.ranking && <p role="alert" className="section-empty">{errors.ranking}<button onClick={() => setAttempt((n) => n + 1)}>다시 시도</button></p>}
-    </div>
-    <div className="section-heading feed-heading"><h2>이번 주 성북천 이야기</h2><span>스탬프를 받은 공개 기록</span></div>
+  return <section className="event-activity" aria-label={activity.heading}>
+    <div className="section-heading feed-heading"><h2>{activity.heading}</h2><span>{activity.note}</span></div>
     {!bridge.isNative && <button type="button" className="section-empty app-feature-link">돈가스 지도에서 성북천 이야기 보기 ›</button>}
-    {bridge.isNative && !feed && !errors.feed && <p className="section-empty" role="status">피드를 불러오고 있어요.</p>}
+    {bridge.isNative && !feed && !error && <p className="section-empty" role="status">피드를 불러오고 있어요.</p>}
     {feed?.length === 0 && <p className="section-empty">이번 주 성북천 이야기를 기다리고 있어요.</p>}
-    {errors.feed && <p role="alert" className="section-empty">{errors.feed}<button onClick={() => setAttempt((n) => n + 1)}>다시 시도</button></p>}
+    {error && <p role="alert" className="section-empty">{error}<button onClick={() => setAttempt((value) => value + 1)}>다시 시도</button></p>}
     <div className="event-hot-feed" onScroll={(e) => {
       const width = e.currentTarget.firstElementChild?.getBoundingClientRect().width;
       if (width) setPage(Math.round(e.currentTarget.scrollLeft / (width + 12)));

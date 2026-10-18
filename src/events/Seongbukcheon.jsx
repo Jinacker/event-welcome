@@ -1,31 +1,88 @@
 import EventIcon from '../components/EventIcon';
-import React, { useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import StampTourBoard from '../components/StampTourBoard';
+import StampRankingPage from '../components/StampRankingPage';
+import StampStoresPage from '../components/StampStoresPage';
 import EventActivity from '../components/EventActivity';
 import EventCalendar from '../components/EventCalendar';
+import EventGiftshop from '../components/EventGiftshop';
+import GiftshopPage from '../components/GiftshopPage';
+import { useStampProgress } from '../components/useStampProgress';
+import { GoodsDialog, PolicyDialog, RewardsDialog, ScheduleDialog } from '../components/EventDialogs';
+import { stampGoal } from '../lib/stamps';
+import { giftshopNote } from '../lib/goods';
+import { calendarPeriod, longPeriodLabel } from '../lib/period';
+import * as content from './seongbukcheonContent';
+
+const lines = (values) => values.map((line, index) => <React.Fragment key={line}>{index ? <br /> : null}{line}</React.Fragment>);
+
 export default function Seongbukcheon({ event, bridge, context }) {
   const [error, setError] = useState('');
+  const [page, setPage] = useState(null);
+  const [dialog, setDialog] = useState(null);
+  const scroll = useRef(0);
+  const stamp = useStampProgress(event, bridge);
+  const goal = stampGoal(event);
+  const period = calendarPeriod(event.calendar);
+  const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
+  const openPage = (name) => { scroll.current = window.scrollY; setPage(name); };
+  const closePage = () => setPage(null);
+  // 서브 화면을 열면 맨 위에서 시작하고, 돌아오면 보던 위치로 되돌린다.
+  useLayoutEffect(() => { window.scrollTo(0, page ? 0 : scroll.current); }, [page]);
   const openMap = async () => {
-    if (!context?.navigationTargets?.includes('event_map')) { setError('이벤트 맛집 지도를 보려면 돈가스 지도를 최신 버전으로 업데이트해주세요.'); return; }
+    if (!context?.navigationTargets?.includes('event_map')) { setError(content.mapSection.updateGuide); return; }
     try { await bridge.navigate('event_map', { eventId: event.id }); }
     catch { setError('지도를 열지 못했어요. 다시 시도해주세요.'); }
   };
+  const closeDialog = () => setDialog(null);
+  const openGoods = (item) => setDialog({ kind: 'goods', item });
+  const dialogs = <>
+    {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
+    {dialog?.kind === 'rewards' && <RewardsDialog onClose={closeDialog} />}
+    {dialog?.kind === 'policy' && <PolicyDialog goal={goal} stores={event.stampTour?.restaurants?.length ?? 0} period={period && longPeriodLabel(period.startDate, period.endDate)} onClose={closeDialog} />}
+    {dialog?.kind === 'goods' && <GoodsDialog item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} />}
+  </>;
+  if (page === 'ranking') return <>
+    <StampRankingPage event={event} bridge={bridge} onClose={closePage} />{dialogs}
+  </>;
+  if (page === 'stores') return <>
+    <StampStoresPage event={event} bridge={bridge} goal={goal} progress={stamp.progress} onClose={closePage} />{dialogs}
+  </>;
+  if (page === 'goods') return <>
+    <GiftshopPage event={event} onSelect={openGoods} onClose={closePage} />{dialogs}
+  </>;
   return <>
-    <section className="hero">
-      <div className="hero-top"><span className="hero-badge">돈가스 지도 · 스탬프 투어</span><span className="hero-location"><EventIcon name="pin" size={12} />성북천</span></div>
-      <div className="hero-content"><div><h1>성북천 따라<br />돈가스 한 바퀴</h1><p>참여 가게에서 맛있는 기록을 남기고<br />나만의 돈가스 여행을 완성해보세요.</p></div>
-        {event.buttonImageUrl && <img className="hero-event-logo" src={event.buttonImageUrl} alt={event.title} />}
+    <section className="hero type-banner" aria-label={`${content.banner.place} ${content.banner.titleLines.join(' ')}`}>
+      <div className="type-banner-top"><p>{content.banner.collaboration}</p>{period && <span>{period.label}</span>}</div>
+      <div className="banner-main-row">
+        <div className="type-banner-title">
+          <span className="type-banner-place">{content.banner.place}</span>
+          <h1>{lines(content.banner.titleLines)}</h1>
+        </div>
+        <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
       </div>
-      <div className="hero-bottom"><span>사진 1장 · 후기 30자 · 공개 기록</span><strong>{event.stampTour?.restaurants?.length ?? 0}곳의 맛있는 발견</strong></div>
+      <div className="banner-venue"><strong>{content.banner.venue.name}</strong><span>{content.banner.venue.address}</span></div>
     </section>
+    <section className="event-course">
+      <div className="section-heading"><h2>{content.mapSection.heading}</h2></div>
+      <p className="map-intro-copy">{lines(content.mapSection.intro)}</p>
+      <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
+        <div className="river" />
+        <span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span>
+        <span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span>
+        <span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span>
+        <span className="course-label">{content.mapSection.label}</span>
+      </button>
+      {error && <p role="alert" className="map-editorial-note">{error}</p>}
+    </section>
+    <StampTourBoard event={event} bridge={bridge} goal={goal} stamp={stamp} nickname={nickname}
+      onOpenRanking={() => openPage('ranking')} onOpenStores={() => openPage('stores')}
+      onOpenRewards={() => setDialog({ kind: 'rewards' })} onOpenPolicy={() => setDialog({ kind: 'policy' })} />
     <EventActivity event={event} bridge={bridge} />
-    <StampTourBoard event={event} bridge={bridge} />
-    <EventCalendar event={event} />
-    <section className="event-course"><div className="section-heading"><h2>성북천 맛집 지도</h2><span>{event.stampTour?.restaurants?.length ?? 0}곳</span></div>
-      <button className="course-preview" aria-label="성북천 맛집 지도와 가게 목록 열기" onClick={openMap}>
-        <div className="river" /><span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span><span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span><span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span><span className="course-label">참여 가게만 지도에서 보기 ↗</span>
-      </button><p className="course-help">지도를 누르면 참여 가게의 위치와 가게 목록을 볼 수 있어요.</p>{error && <p role="alert" className="course-help">{error}</p>}
-    </section>
-    <section className="intro-card"><span className="pill">이벤트 안내</span><h2>{event.title}</h2><p>{typeof event.publicData?.description === 'string' ? event.publicData.description : '참여 가게에서 돈가스를 즐기고 공개 기록을 남겨주세요.'}</p></section>
+    <EventCalendar event={event} heading={content.schedule.heading} period={period?.label} closure={content.closure}
+      onSelect={(item) => setDialog({ kind: 'schedule', item })} />
+    <EventGiftshop event={event} onOpenPage={() => openPage('goods')} onSelect={openGoods} />
+    <footer className="brand-footer"><p>{content.footer.copy}</p><strong>{content.footer.brand}</strong></footer>
+    {dialogs}
   </>;
 }

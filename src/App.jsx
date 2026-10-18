@@ -20,7 +20,8 @@ export default function App() {
   const native = bridge.isNative;
   const storeUrl = appStoreUrl(window.navigator);
   const handleBrowserClick = (action) => {
-    if (native || !action.target.closest?.('button, a')) return;
+    // 이벤트 웹 안에서 동작하는 버튼·링크(서브 화면, 팝업, 굿즈)는 스토어로 보내지 않는다.
+    if (native || !action.target.closest?.('button, a') || action.target.closest?.('[data-browser-ok]')) return;
     action.preventDefault(); action.stopPropagation(); window.location.assign(storeUrl);
   };
   const openHome = () => {
