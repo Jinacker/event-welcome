@@ -429,6 +429,22 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .goods-empty { padding: 26px 14px; border: 1px dashed var(--border); border-radius: 12px; text-align: center; font-size: 12px; color: var(--muted); }
 .event-partner-handle { color: var(--accent); font-weight: 700; overflow-wrap: anywhere; }
 .event-date-dialog { z-index: 30; overscroll-behavior: none; }
+.schedule-dialog{padding:22px 20px;}
+.schedule-dialog .event-dialog-header{gap:12px;margin-bottom:10px;}
+.schedule-dialog .event-dialog-header h2{font-size:20px;}
+.schedule-dialog .event-dialog-header button{flex-basis:28px;width:28px;height:28px;}
+.schedule-dialog .event-dialog-header button svg{width:16px;height:16px;}
+.schedule-dialog .event-dialog-date{font-size:12px;margin-bottom:18px;}
+.schedule-dialog .event-dialog-info{padding:15px;}
+.schedule-dialog .event-dialog-venue{font-size:15px;}
+.schedule-dialog .event-dialog-address,.schedule-dialog .event-dialog-closed{font-size:11px;}
+.schedule-dialog .event-dialog-hours{font-size:13px;margin-top:10px;}
+.schedule-dialog .event-dialog-list{margin-top:20px;padding-top:16px;}
+.schedule-dialog .event-dialog-list h3{font-size:14px;margin-bottom:10px;}
+.schedule-dialog .event-dialog-list ul{font-size:12px;}
+.schedule-dialog .event-dialog-list li+li{margin-top:6px;}
+.schedule-dialog .event-program-description{margin-top:18px;font-size:12px;line-height:1.75;}
+.schedule-dialog .event-program-gift{margin-top:16px;padding:12px 14px;font-size:12px;}
 /* 이벤트 페이지가 자체 브랜드 푸터를 가지면 공용 푸터는 숨긴다 */
 /* 관리자가 일정 설명에 넣은 줄바꿈을 그대로 보여준다 */
 .event-dialog-info > p { white-space: pre-line; }

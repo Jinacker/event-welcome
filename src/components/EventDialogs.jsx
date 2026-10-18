@@ -10,7 +10,7 @@ export function ScheduleDialog({ item, native, onClose }) {
   const detail = item;
   const lists = [{ heading: '전시 콘텐츠', items: item.contents }, { heading: '기프트숍', items: item.giftshop }].filter((list) => list.items);
   const description = detail ? (detail.description ?? (item.description ?? '').trim()) : '';
-  return <EventDialog title={item.title} onClose={onClose}>
+  return <EventDialog title={item.title} className="schedule-dialog" onClose={onClose}>
     <div className="event-dialog-content"><article className="event-dialog-item">
       <p className="event-dialog-date">{dateRangeLabel(item.startDate, item.endDate)}</p>
       {detail?.venue ? <div className="event-dialog-info">
