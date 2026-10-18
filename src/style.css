@@ -253,7 +253,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .hot-feed-card{border:0;border-radius:0;padding:0;background:transparent;}
 @media(max-width:360px){.hero h1{font-size:26px;}.hero-event-logo{width:64px;height:64px;}.hero-content{gap:8px;}.stamp-tour{padding:0;}.stamp-summary>div{gap:9px;}.stamp-summary strong{font-size:25px;}.stamp-tour .stamp-grid{gap:9px;}}
 
-.event-schedule .calendar-week-events{grid-auto-rows:minmax(22px,auto)}.event-schedule .calendar-event-bar{white-space:normal;overflow-wrap:anywhere;line-height:1.35;padding:4px 3px;font-size:10px}
+.event-schedule .calendar-week-events{grid-auto-rows:minmax(22px,auto)}.event-schedule .calendar-event-bar{white-space:normal;overflow-wrap:anywhere;line-height:1.35;padding:4px 3px;font-size:9px}
 
 .event-date-dialog{position:fixed;inset:0;margin:auto;width:min(380px,calc(100% - 40px));max-height:80dvh;overflow:auto;padding:22px;border:0;border-radius:18px;background:#fff;color:var(--text);box-shadow:0 16px 60px #0003;}
 .event-date-dialog::backdrop{background:#10213599;}
@@ -440,3 +440,17 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stores-page .stamp-store-status{width:52px;height:52px;flex:0 0 52px;}
 .stores-page .stamp-store-status .earned-stamp-mark{padding:12%;}
 .stores-page .stamp-store-status .earned-stamp-mark>span{font-size:9px;font-weight:900;line-height:1.12;letter-spacing:-.07em;overflow-wrap:normal;}
+
+/* 2·1·3위 순서의 시상대. 공동 순위는 같은 자리에 함께 표시한다. */
+.stamp-ranking-title{display:flex;align-items:center;gap:7px;}
+.stamp-ranking-title>svg{color:#1E3C62;}
+.stamp-ranking-podium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;margin:28px 0 24px;}
+.stamp-podium-column{min-width:0;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;}
+.stamp-podium-winners{display:flex;flex-direction:column;align-items:center;gap:7px;padding:0 5px 12px;}
+.stamp-podium-medal{font-size:32px;line-height:1.3;}
+.stamp-podium-name{max-width:100%;font-size:13px;line-height:1.4;font-weight:700;overflow-wrap:anywhere;word-break:keep-all;}
+.stamp-podium-place-1 .stamp-podium-name{font-weight:800;}
+.stamp-podium-empty{font-size:13px;color:var(--inactive);}
+.stamp-podium-step{height:52px;background:#DCD8D3;}
+.stamp-podium-place-1 .stamp-podium-step{height:78px;}
+.stamp-podium-place-3 .stamp-podium-step{height:28px;}
