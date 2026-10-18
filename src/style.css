@@ -427,7 +427,6 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-partner-handle { color: var(--accent); font-weight: 700; overflow-wrap: anywhere; }
 .event-date-dialog { z-index: 30; overscroll-behavior: none; }
 /* 이벤트 페이지가 자체 브랜드 푸터를 가지면 공용 푸터는 숨긴다 */
-.event-page:has(.brand-footer) > footer { display: none; }
 /* 관리자가 일정 설명에 넣은 줄바꿈을 그대로 보여준다 */
 .event-dialog-info > p { white-space: pre-line; }
 

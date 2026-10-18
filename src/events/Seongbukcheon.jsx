@@ -80,7 +80,6 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     <EventCalendar heading={content.schedule.heading} period={period?.label}
       onSelect={(item) => navigation.openDialog({ kind: 'schedule', item })} />
     <EventGiftshop event={event} onOpenPage={() => openPage('goods')} onSelect={openGoods} bridge={bridge} />
-    <footer className="brand-footer"><p>{content.footer.copy}</p><strong>{content.footer.brand}</strong></footer>
     {dialogs}
   </>;
 }
