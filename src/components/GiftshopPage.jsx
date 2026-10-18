@@ -3,13 +3,12 @@ import { GoodsCard } from './EventGiftshop';
 import { GOODS_SORTS, giftshopItems, giftshopNote, sortGoods } from '../lib/goods';
 import { giftshopPage } from '../events/seongbukcheonContent';
 
-export default function GiftshopPage({ event, onSelect, onClose, bridge }) {
+export default function GiftshopPage({ event, onSelect, bridge }) {
   const [sort, setSort] = useState(GOODS_SORTS[0].value);
   const items = giftshopItems(event);
   const note = giftshopNote(event);
   return <section className="goods-page" aria-label="기프트숍 전체 목록" data-browser-ok>
     <header className="ranking-page-header">
-      <button type="button" onClick={onClose} aria-label="이벤트 화면으로 돌아가기">← 돌아가기</button>
       <strong>{giftshopPage.title}</strong>
     </header>
     {note && <p className="goods-intro">{note}</p>}

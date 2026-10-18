@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { storesPage } from '../events/seongbukcheonContent';
 
-export default function StampStoresPage({ event, bridge, goal, progress, onClose }) {
+export default function StampStoresPage({ event, bridge, goal, progress }) {
   const [error, setError] = useState('');
   const restaurants = event.stampTour?.restaurants ?? [];
   const received = new Set(progress?.stamps?.map((item) => item.restaurantId) ?? []);
@@ -9,7 +9,6 @@ export default function StampStoresPage({ event, bridge, goal, progress, onClose
   const remaining = Math.max(0, goal - (progress?.earned ?? 0));
   return <section className="stores-page" aria-label="산책 지도 가게 목록" data-browser-ok>
     <header className="ranking-page-header">
-      <button type="button" onClick={onClose} aria-label="이벤트 화면으로 돌아가기">← 돌아가기</button>
       <strong>{storesPage.title}</strong>
     </header>
     {progress

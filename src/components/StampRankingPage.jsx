@@ -4,7 +4,7 @@ import { singleFlight } from '../lib/refresh';
 import React, { useEffect, useState } from 'react';
 import { rankingPage } from '../events/seongbukcheonContent';
 
-export default function StampRankingPage({ event, bridge, onClose }) {
+export default function StampRankingPage({ event, bridge }) {
   const eventRefresh = useEventRefresh();
   const [ranking, setRanking] = useState(null);
   const [error, setError] = useState('');
@@ -28,7 +28,6 @@ export default function StampRankingPage({ event, bridge, onClose }) {
   const navigate = (target, params) => bridge.navigate(target, params).catch(() => setNavigationError('화면을 열지 못했어요. 다시 시도해주세요.'));
   return <section className="ranking-page" aria-label="스탬프 랭킹 화면" data-browser-ok>
     <header className="ranking-page-header">
-      <button type="button" onClick={onClose} aria-label="이벤트 화면으로 돌아가기">← 돌아가기</button>
       <strong>{rankingPage.title}</strong>
     </header>
     <div className="section-heading"><h2>{rankingPage.heading}</h2><span>{rankingPage.note}</span></div>

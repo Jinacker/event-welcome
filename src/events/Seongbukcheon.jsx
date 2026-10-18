@@ -25,7 +25,6 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
   const period = calendarPeriod(scheduleItems);
   const nickname = typeof context?.user?.nickname === 'string' ? context.user.nickname.trim() : '';
   const openPage = (name) => { scroll.current = window.scrollY; navigation.openPage(name); };
-  const closePage = () => navigation.back();
   // 서브 화면을 열면 맨 위에서 시작하고, 돌아오면 보던 위치로 되돌린다.
   useLayoutEffect(() => { window.scrollTo(0, page ? 0 : scroll.current); }, [page]);
   const openMap = async () => {
@@ -42,13 +41,13 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} />}
   </>;
   if (page === 'ranking') return <>
-    <StampRankingPage event={event} bridge={bridge} onClose={closePage} />{dialogs}
+    <StampRankingPage event={event} bridge={bridge} />{dialogs}
   </>;
   if (page === 'stores') return <>
-    <StampStoresPage event={event} bridge={bridge} goal={goal} progress={stamp.progress} onClose={closePage} />{dialogs}
+    <StampStoresPage event={event} bridge={bridge} goal={goal} progress={stamp.progress} />{dialogs}
   </>;
   if (page === 'goods') return <>
-    <GiftshopPage event={event} onSelect={openGoods} onClose={closePage} bridge={bridge} />{dialogs}
+    <GiftshopPage event={event} onSelect={openGoods} bridge={bridge} />{dialogs}
   </>;
   return <>
     <section className="hero type-banner" aria-label={`${content.banner.place} ${content.banner.titleLines.join(' ')}`}>
