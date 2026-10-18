@@ -537,4 +537,6 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .brand-footer-logo{flex-shrink:0;width:auto;height:34px;}
 .brand-footer-copy{min-width:0;}
 .brand-footer-copy p{margin:0 0 2px;}
+.brand-footer-copy p:last-child{margin:0;}
+.brand-footer-copy strong{display:inline;margin-left:5px;}
 @media(max-width:360px){.brand-footer{gap:9px;}.brand-footer-logo{height:30px;}}

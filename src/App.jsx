@@ -84,7 +84,7 @@ function EventApp() {
     {!native && <a className="app-button" href={storeUrl}>돈가스 지도 다운로드</a>}
     <footer className="brand-footer">
       <img className="brand-footer-logo" src="/brand-croquette.png" alt="" aria-hidden="true" />
-      <div className="brand-footer-copy">{brandFooter.copy.map((line) => <p key={line}>{line}</p>)}<strong>{brandFooter.brand}</strong></div>
+      <div className="brand-footer-copy">{brandFooter.copy.map((line, index) => <p key={line}>{line}{index === brandFooter.copy.length - 1 && <strong>{brandFooter.brand}</strong>}</p>)}</div>
     </footer>
     {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
     <button className="event-home-fab" data-platform={context?.platform} data-browser-ok={canGoBack || undefined} disabled={Boolean(demo) && !canGoBack} aria-label={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} title={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} onClick={closeEvent}>
