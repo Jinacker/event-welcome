@@ -34,6 +34,7 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
     </div>
     <div className="stamp-tour-heading">
       <h2>{nickname ? `${nickname}님의 스탬프` : '내 스탬프'}</h2>
+      <img className="stamp-heading-stamp" src="/stamp-section-sticker.png" alt="" aria-hidden="true" />
     </div>
     <div className="stamp-summary">
       <div><p>현재 모은 스탬프</p><strong>{progress ? earned : '—'} <small>/ {board.length}</small></strong></div>
