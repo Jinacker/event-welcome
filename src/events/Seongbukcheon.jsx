@@ -52,12 +52,21 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
   </>;
   return <>
     <section className="hero type-banner" aria-label={`${content.banner.place} ${content.banner.titleLines.join(' ')}`}>
-      <div className="type-banner-top"><p>{content.banner.collaboration}</p>{period && <span>{period.label}</span>}</div>
       <div className="banner-main-row">
         <div className="type-banner-title">
           <h1 className="banner-title-image"><img src="/seongbukcheon-title.png" width="1086" height="1448" alt="성북천 걸어서 돈가스 속으로" /></h1>
         </div>
-        <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
+        <div className="banner-side">
+          <div className="banner-partners" aria-label="돌고돌아 성북천과 카츠헌터 협업">
+            <img className="banner-partner-seongbukcheon" src="/seongbukcheon-partner-logo-white.png" alt="돌고돌아 성북천" />
+            <img className="banner-partner-cross" src="/partner-cross.png" alt="" aria-hidden="true" width="120" height="120" />
+            <div className="banner-partner-hunter">
+              <img src="/katsu-hunter-emblem.png" alt="" />
+              <span>카츠헌터</span>
+            </div>
+          </div>
+          <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
+        </div>
       </div>
       <a className="banner-venue" data-browser-ok href={venueHref(bridge.isNative)}
         target={bridge.isNative ? '_self' : '_blank'} rel="noopener noreferrer" aria-label="라운지 돌돌 위치 보기">
