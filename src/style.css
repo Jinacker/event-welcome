@@ -517,4 +517,13 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .goods-sticker{position:absolute;width:auto;pointer-events:none;-webkit-user-drag:none;}
 .sticker-shirt{top:-12px;right:-10px;height:54px;transform:rotate(-8deg);}
 .sticker-duck{left:-12px;top:60%;height:68px;transform:translateY(-50%) rotate(7deg);}
-@media(max-width:360px){.sticker-shirt{top:-10px;right:-8px;height:46px;}.sticker-duck{left:-10px;height:58px;}}
+@media(max-width:360px){.sticker-shirt{top:-10px;right:-8px;height:46px;}.sticker-duck{left:-10px;height:58px;}}/* 성북천 오리부터 기프트숍까지 장식 스티커가 느리게 좌우로 까딱인다. 각자 주기를 달리해 따로 논다. */
+@keyframes sticker-sway{0%,100%{transform:var(--sway-base,translate(0)) rotate(-2.5deg);}50%{transform:var(--sway-base,translate(0)) rotate(2.5deg);}}
+.feed-heading-duck,.calendar-sticker,.goods-sticker{animation:sticker-sway 5s ease-in-out infinite;transform-origin:50% 80%;}
+.feed-heading-duck{--sway-base:translateY(-50%) rotate(-7deg);animation-duration:5.6s;}
+.sticker-glass{--sway-base:rotate(9deg);animation-duration:4.8s;animation-delay:-1.2s;transform-origin:50% 95%;}
+.sticker-taco{animation-duration:6.2s;animation-delay:-2.4s;}
+.sticker-sando{animation-duration:5.4s;animation-delay:-3.1s;}
+.sticker-shirt{--sway-base:rotate(-8deg);animation-duration:5.9s;animation-delay:-.8s;transform-origin:50% 15%;}
+.sticker-duck{--sway-base:translateY(-50%) rotate(7deg);animation-duration:6.6s;animation-delay:-2s;transform-origin:50% 8%;}
+@media (prefers-reduced-motion: reduce){.feed-heading-duck,.calendar-sticker,.goods-sticker{animation:none;}}
