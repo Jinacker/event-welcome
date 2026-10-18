@@ -27,14 +27,11 @@ export default function StampRankingPage({ event, bridge }) {
   }, [event.id, bridge, attempt, eventRefresh]);
   const navigate = (target, params) => bridge.navigate(target, params).catch(() => setNavigationError('화면을 열지 못했어요. 다시 시도해주세요.'));
   return <section className="ranking-page" aria-label="스탬프 랭킹 화면" data-browser-ok>
-    <header className="ranking-page-header">
-      <strong>{rankingPage.title}</strong>
-    </header>
-    <div className="section-heading"><h2 className="stamp-ranking-title">{rankingPage.heading}
-      <svg width="23" height="23" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+    <div className="section-heading stamp-ranking-heading"><h2 className="stamp-ranking-title">{rankingPage.title}
+      <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
         <path d="M7 2h10v3h4v3a5 5 0 0 1-5 5h-.1a5 5 0 0 1-2.9 1.9V20h4v2H7v-2h4v-5.1A5 5 0 0 1 8.1 13H8a5 5 0 0 1-5-5V5h4V2Zm0 5H5v1a3 3 0 0 0 2.1 2.9A5 5 0 0 1 7 10V7Zm10 0v3c0 .3 0 .6-.1.9A3 3 0 0 0 19 8V7h-2Z" />
       </svg>
-    </h2><span>{rankingPage.note}</span></div>
+    </h2></div>
     {ranking?.items?.length > 0 && <div className="stamp-ranking-podium" aria-label="스탬프 랭킹 시상대">
       {[2, 1, 3].map((rank) => {
         const winners = ranking.items.filter((item) => item.rank === rank);
