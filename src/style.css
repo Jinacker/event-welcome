@@ -248,6 +248,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-info .section-heading{align-items:baseline;}
 .event-info-copy{font-size:12px;line-height:1.8;margin:12px 0 4px;color:var(--muted);}
 .event-schedule .calendar-card{padding:12px 0 16px;border:0;border-radius:0;}
+/* 달을 세로로 이어 붙여 보여주므로 두 번째 달부터 구분선을 넣는다. */
+.calendar-month+.calendar-month{border-top:1px solid var(--border);}
+.calendar-month+.calendar-month .calendar-card{padding-top:16px;}
 .event-activity{margin:32px 0 0;}
 .feed-heading{margin-top:0;}
 /* 오리 스티커는 제목 줄 오른쪽에 띄워 올려 레이아웃 공간을 차지하지 않는다. */
@@ -503,3 +506,10 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-podium-step{height:26px;background:#DCD8D3;}
 .stamp-podium-place-1 .stamp-podium-step{height:40px;}
 .stamp-podium-place-3 .stamp-podium-step{height:14px;}
+.calendar-month{position:relative;}
+.event-schedule .calendar-week{position:relative;}
+.calendar-sticker{position:absolute;width:auto;pointer-events:none;-webkit-user-drag:none;}
+.sticker-glass{left:14px;top:38px;height:62px;transform:rotate(9deg);}
+.sticker-sando{left:13%;top:38px;height:52px;}
+.sticker-taco{top:-18px;right:2px;height:58px;}
+@media(max-width:360px){.sticker-glass{left:10px;top:34px;height:54px;}.sticker-sando{top:34px;height:46px;}.sticker-taco{top:-15px;height:50px;}}
