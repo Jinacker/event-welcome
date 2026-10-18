@@ -42,7 +42,11 @@ export default function EventDialog({ title, className = '', closeLabel = '팝�
     if (action.clientX < area.left || action.clientX > area.right || action.clientY < area.top || action.clientY > area.bottom) onClose();
   };
   return <dialog ref={ref} className={`event-date-dialog ${className}`.trim()} data-browser-ok aria-label={title} onClick={backdrop}>
-    <div className="event-dialog-header"><h2>{title}</h2><button type="button" aria-label={closeLabel} onClick={onClose}>×</button></div>
+    <div className="event-dialog-header"><h2>{title}</h2><button type="button" aria-label={closeLabel} onClick={onClose}>
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <path d="m6 6 12 12M18 6 6 18" />
+      </svg>
+    </button></div>
     {children}
   </dialog>;
 }

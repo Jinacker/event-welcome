@@ -120,7 +120,7 @@ svg { flex-shrink: 0; }
 .stamp-restaurants small { color: var(--inactive); font-size: 10px; flex-shrink: 0; }
 .calendar-card { padding: 16px; }
 .calendar-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 14px; }
-.calendar-heading button { width: 30px; height: 30px; border: 0; border-radius: 50%; background: #B2DEE8; color: var(--muted); font-size: 20px; }
+.calendar-heading button { display: inline-flex; align-items: center; justify-content: center; padding: 0; width: 30px; height: 30px; border: 0; border-radius: 50%; background: #B2DEE8; color: var(--muted); font-size: 20px; line-height: 1; vertical-align: middle; }
 .calendar-grid, .calendar-week-dates, .calendar-week-events { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); }
 .calendar-grid, .calendar-week-dates { text-align: center; }
 .weekday { margin-bottom: 10px; font-size: 10px; color: var(--inactive); }
@@ -268,7 +268,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-date-dialog{width:min(420px,calc(100% - 32px));padding:26px 24px;max-height:85dvh;}
 .event-dialog-header{align-items:flex-start;gap:16px;margin-bottom:12px;}
 .event-dialog-header h2{font-size:22px;font-weight:800;line-height:1.4;letter-spacing:-.045em;word-break:keep-all;overflow-wrap:anywhere;}
-.event-dialog-header button{flex:0 0 32px;width:32px;height:32px;font-size:22px;}
+.event-dialog-header button{display:inline-flex;align-items:center;justify-content:center;padding:0;flex:0 0 32px;width:32px;height:32px;font-size:22px;line-height:1;}
 .event-dialog-item{border:0;padding:0;}
 .event-dialog-item .event-dialog-date{font-size:13px;font-weight:700;line-height:1.5;letter-spacing:0;color:var(--accent);margin:0 0 24px;}
 .event-dialog-info{padding:18px;background:#f3f4f5;border-radius:10px;}
