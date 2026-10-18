@@ -212,7 +212,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stores-page h2{font-size:20px;letter-spacing:-.04em;}
 .stores-note{font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:22px;}
 .stores-page .stamp-restaurants{grid-template-columns:1fr;}
-.stores-page .stamp-restaurants button{padding:17px 15px;}
+.stores-page .stamp-restaurants button{padding:9px 15px;}
 .stores-page .stamp-restaurants span{font-size:14px;}
 .stores-pending{padding:20px;text-align:center;background:#f3f4f5;border-radius:12px;font-size:12px;color:var(--muted);}
 
