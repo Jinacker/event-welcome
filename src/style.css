@@ -18,7 +18,18 @@
 html { overscroll-behavior-y: contain; }
 /* 앱 WebView는 네이티브 화면과 같은 탄성 스크롤을 쓴다. 브라우저는 당겨서 새로고침을 막기 위해 contain을 유지한다. */
 html[data-native='1'] { overscroll-behavior-y: auto; }
-body { margin: 0; }
+body {
+  margin: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+input, textarea, [contenteditable]:not([contenteditable='false']) {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
+}
+img, a { -webkit-user-drag: none; }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; cursor: pointer; }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
