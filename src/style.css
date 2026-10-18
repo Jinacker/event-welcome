@@ -411,7 +411,6 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-page .ranking-page, .event-page .stores-page, .event-page .goods-page { max-width: none; min-height: 0; margin: 0; padding: 0; }
 .event-program-description, .event-dialog-item .event-program-description { white-space: pre-line; }
 .goods-dialog-note { margin: 14px 0 0; font-size: 12px; line-height: 1.7; color: var(--muted); }
-.goods-store-link { display: inline-flex; align-items: center; justify-content: center; margin-top: 10px; padding: 9px 12px; border: 1px solid var(--accent); border-radius: 8px; background: transparent; color: var(--accent); font-size: 12px; font-weight: 600; text-decoration: none; }
 .goods-name-link { color: inherit; text-decoration: none; }
 .goods-empty { padding: 26px 14px; border: 1px dashed var(--border); border-radius: 12px; text-align: center; font-size: 12px; color: var(--muted); }
 .event-partner-handle { color: var(--accent); font-weight: 700; overflow-wrap: anywhere; }

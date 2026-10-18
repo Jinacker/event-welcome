@@ -18,7 +18,6 @@ export function GoodsCard({ item, event, onSelect, bridge }) {
       : <div className={photoClass} aria-hidden="true" />}
     <h3>{linked ? <GoodsStoreLink item={item} event={event} bridge={bridge} className="goods-name-link">{item.name}</GoodsStoreLink> : item.name}</h3>
     {item.price && <p>{item.price}</p>}
-    <GoodsStoreLink item={item} event={event} bridge={bridge} />
   </article>;
 }
 

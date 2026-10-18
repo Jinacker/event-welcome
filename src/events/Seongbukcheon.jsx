@@ -40,7 +40,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
     {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
     {dialog?.kind === 'rewards' && <RewardsDialog onClose={closeDialog} />}
     {dialog?.kind === 'policy' && <PolicyDialog goal={goal} stores={event.stampTour?.restaurants?.length ?? 0} period={period && longPeriodLabel(period.startDate, period.endDate)} onClose={closeDialog} />}
-    {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} event={event} note={giftshopNote(event)} onClose={closeDialog} bridge={bridge} />}
+    {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} />}
   </>;
   if (page === 'ranking') return <>
     <StampRankingPage event={event} bridge={bridge} onClose={closePage} />{dialogs}
