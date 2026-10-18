@@ -1,5 +1,6 @@
 import React from 'react';
 import EventDialog from './EventDialog';
+import GoodsStoreLink from './GoodsStoreLink';
 import { dateRangeLabel } from '../lib/period';
 import * as content from '../events/seongbukcheonContent';
 
@@ -60,10 +61,11 @@ export function PolicyDialog({ goal, stores, period, onClose }) {
   </EventDialog>;
 }
 
-export function GoodsDialog({ item, note, onClose }) {
+export function GoodsDialog({ item, note, onClose, bridge, context }) {
   return <EventDialog title={item.name} className="goods-dialog" closeLabel="상품 사진 닫기" onClose={onClose}>
     {item.imageUrl && <img className="goods-dialog-image" src={item.imageUrl} alt={item.name} />}
     {item.price && <p className="goods-dialog-price">{item.price}</p>}
     {note && <p className="goods-dialog-note">{note}</p>}
+    <GoodsStoreLink item={item} bridge={bridge} context={context} />
   </EventDialog>;
 }

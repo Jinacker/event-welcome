@@ -1,6 +1,6 @@
 # 앱 ↔ 이벤트 웹 연결 가이드
 
-2026-10-14 코드 기준. 이벤트 화면을 만드는 에이전트가 먼저 읽는 공용 브리지 설명서다.
+2026-10-18 코드 기준. 이벤트 화면을 만드는 에이전트가 먼저 읽는 공용 브리지 설명서다.
 실제 배포 주소는 `https://event-welcome.vercel.app`이다. 이 저장소에서는 README를 만들지 않는다.
 
 ## 시작 위치
@@ -23,7 +23,7 @@ bridge 호출은 Promise이며, 결과 또는 오류로 돌아온다. 페이지�
 | 필드 | 실제 전달 값 |
 | --- | --- |
 | user | `{ id, nickname, profilePhotoUrl }` 또는 null |
-| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData`, optional `stampTour`, `calendar`, `mapView` |
+| event | `id`, `title`, `enabled`, `webPath`, `webUrl`, `buttonImageUrl`, `publicData`, optional `stampTour`, `calendar`, `mapView`, `mapMessage`, `giftshop` |
 | platform | `ios` / `android` |
 | appVersion | 앱 버전 문자열 |
 | safeArea | `{ top, bottom, left, right }` |
@@ -78,6 +78,16 @@ await bridge.haptic('light');
 ```
 
 close는 이벤트 레이어만 닫고 탭은 이동하지 않는다. navigate는 보통 이벤트를 닫고 지정한 화면으로 이동한다. 최신 앱의 restaurant 목적지는 이벤트를 유지한 채 가게 상세 모달만 위에 열며, 모달을 닫으면 보던 이벤트로 돌아온다. 구버전 앱의 restaurant는 기존 홈 지도 이동을 유지한다.
+
+굿즈의 `giftshop.items[].linkUrl`은 optional 구매 URL이다. 2048자 이하의 https 주소만 허용하며 자격정보·공백·제어문자·역슬래시가 있는 주소는 거부한다. 서버 저장 시 기존 굿즈에서 이 필드가 누락되면 기존 링크를 보존하고, null·빈 문자열은 링크를 지운다. 신규 굿즈에서 누락되면 구매 버튼 없이 표시한다.
+
+```js
+if (context?.capabilities?.includes('share')) {
+  await bridge.share(item.linkUrl);
+}
+```
+
+굿즈 카드·전체 목록·상세 팝업에서 앱에는 `스토어 링크 공유·복사` 버튼을 표시해 기존 공유창으로 URL을 보낸다. 브라우저에는 `스토어에서 보기` 링크를 `target="_blank" rel="noopener noreferrer"`로 표시한다. 앱은 수정하지 않으며 WebView의 외부 탐색 차단을 유지한다. 앱 안에서 스토어를 한 번에 직접 여는 기능은 제공하지 않는다. 공유창에서 선택 가능한 앱·복사 메뉴는 OS에 따라 다르다. 공유 요청 실패는 안내와 재시도를 제공한다.
 
 ## 앱 화면 이동
 
