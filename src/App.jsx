@@ -82,7 +82,10 @@ function EventApp() {
     {demo && <div className="demo-notice">목업 미리보기 · 실제 참여 현황이나 일정이 아닙니다.</div>}
     {Page ? <Page event={event} context={context} bridge={bridge} navigation={navigation} navigationState={navigationState} /> : <section className="intro-card"><h1>{event.title}</h1><p>이벤트 안내를 준비하고 있어요.</p></section>}
     {!native && <a className="app-button" href={storeUrl}>돈가스 지도 다운로드</a>}
-    <footer className="brand-footer"><p>{brandFooter.copy}</p><strong>{brandFooter.brand}</strong></footer>
+    <footer className="brand-footer">
+      <img className="brand-footer-logo" src="/brand-croquette.png" alt="" aria-hidden="true" />
+      <div className="brand-footer-copy">{brandFooter.copy.map((line) => <p key={line}>{line}</p>)}<strong>{brandFooter.brand}</strong></div>
+    </footer>
     {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
     <button className="event-home-fab" data-platform={context?.platform} data-browser-ok={canGoBack || undefined} disabled={Boolean(demo) && !canGoBack} aria-label={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} title={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} onClick={closeEvent}>
       <EventIcon name="undo" size={context?.platform === 'android' ? 23 : 25} filled />

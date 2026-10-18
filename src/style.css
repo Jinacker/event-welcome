@@ -532,3 +532,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-tour-heading{position:relative;}
 .stamp-heading-stamp{position:absolute;right:26px;bottom:-2px;width:auto;height:58px;transform:rotate(7deg);pointer-events:none;-webkit-user-drag:none;--sway-base:rotate(7deg);animation-name:sticker-sway-soft;animation-duration:5.2s;animation-delay:-1.6s;transform-origin:50% 90%;}
 @media(max-width:360px){.stamp-heading-stamp{right:20px;height:50px;}}
+/* 푸터는 크로켓 아이콘과 문구를 묶어 가운데 두고, 문구만 로고 쪽으로 붙여 왼쪽 정렬한다. */
+.brand-footer{display:flex;align-items:center;justify-content:center;gap:11px;text-align:left;}
+.brand-footer-logo{flex-shrink:0;width:auto;height:34px;}
+.brand-footer-copy{min-width:0;}
+.brand-footer-copy p{margin:0 0 2px;}
+@media(max-width:360px){.brand-footer{gap:9px;}.brand-footer-logo{height:30px;}}

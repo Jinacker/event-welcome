@@ -91,6 +91,6 @@ export const schedule = { heading: '행사 안내' };
 // 라운지돌돌 정기 휴무. 일정이 있는 날의 월요일 칸에 '휴무'로 표시한다.
 export const closure = { weekday: 1, label: '휴무', title: '라운지돌돌 월요일 휴무' };
 
-export const footer = { copy: '돈가스에 진심인 당신을 위한 단 하나의 지도', brand: '돈가스지도' };
+export const footer = { copy: ['돈가스에 진심인 당신을 위한', '단 하나의 지도'], brand: '돈가스지도' };
 
 export const schedulePending = '시간·장소·상세 안내는 추후 등록됩니다.';
