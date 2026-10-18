@@ -409,7 +409,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-reward-intro{margin-top:14px;}
 .stamp-reward-intro h3{margin:0 0 3px;font-size:18px;line-height:1.35;font-weight:800;letter-spacing:-.035em;}
 .stamp-reward-intro>.stamp-prize-copy{margin:0;font-size:13px;line-height:1.5;font-weight:500;color:var(--text);}
-.stamp-reward-intro>.stamp-prize-copy+p{margin:8px 0 0;font-size:11px;line-height:1.6;color:var(--muted);}
+.stamp-reward-intro>.stamp-prize-copy+p{margin:8px 0 0;font-size:11px;line-height:1.6;color:var(--muted);white-space:pre-line;}
 @media(max-width:360px){.stamp-reward-intro h3{font-size:17px;}}
 
 .stamp-reward-intro>.stamp-prize-copy{color:var(--accent);}.stamp-prize-copy strong{font-weight:800;}
