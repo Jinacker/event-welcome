@@ -14,11 +14,14 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
   const board = stampBoard(goal, earned, stampSection.milestones);
   const total = Math.max(1, board.length);
   const remaining = Math.max(0, board.length - earned);
-  const slot = ({ index, filled }) => <div key={index} className={`stamp-slot ${filled ? 'filled' : ''}`.trim()}
-    aria-label={`${index + 1}번째 ${filled ? '획득' : '빈'} 스탬프`} style={filled ? { '--stamp-angle': `${ANGLES[index % ANGLES.length]}deg` } : undefined}>
+  // 보상 칸은 번호 아래에 받는 추첨권까지 칸 안에 적는다.
+  const slot = ({ index, filled, label }) => <div key={index} className={`stamp-slot ${filled ? 'filled' : ''}`.trim()}
+    aria-label={`${index + 1}번째 ${filled ? '획득' : '빈'} 스탬프${label ? ` · ${label}` : ''}`} style={filled ? { '--stamp-angle': `${ANGLES[index % ANGLES.length]}deg` } : undefined}>
     {filled
       ? <span className="earned-stamp-mark" role="img" aria-label={`${stampSection.mark.join(' ')} 도장`}>{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>
-      : <span>{index + 1}</span>}
+      : label
+        ? <span className="stamp-slot-reward"><b>{index + 1}</b><small>{label}</small></span>
+        : <span>{index + 1}</span>}
   </div>;
   return <section className="stamp-tour" aria-label="스탬프 투어" data-browser-ok>
     <div className="stamp-reward-intro">
@@ -47,7 +50,7 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
     {error && <div role="alert"><p>{error}</p><button onClick={refresh} disabled={loading}>다시 시도</button></div>}
     <div className="stamp-grid" aria-label={`스탬프 ${earned}개`}>
       {board.map((item) => item.label
-        ? <div className="stamp-milestone" key={item.index}>{slot(item)}<small>{item.label}</small></div>
+        ? <div className="stamp-milestone" key={item.index}>{slot(item)}</div>
         : slot(item))}
     </div>
     <p className="stamp-early-note">{stampSection.earlyNote}</p>
