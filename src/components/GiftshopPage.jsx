@@ -3,7 +3,7 @@ import { GoodsCard } from './EventGiftshop';
 import { GOODS_SORTS, giftshopItems, giftshopNote, sortGoods } from '../lib/goods';
 import { giftshopPage } from '../events/seongbukcheonContent';
 
-export default function GiftshopPage({ event, onSelect, onClose, bridge, context }) {
+export default function GiftshopPage({ event, onSelect, onClose, bridge }) {
   const [sort, setSort] = useState(GOODS_SORTS[0].value);
   const items = giftshopItems(event);
   const note = giftshopNote(event);
@@ -20,7 +20,7 @@ export default function GiftshopPage({ event, onSelect, onClose, bridge, context
       </select></label>
     </div>
     {items.length
-      ? <div className="goods-grid goods-all-grid">{sortGoods(items, sort).map((item) => <GoodsCard key={item.key} item={item} onSelect={onSelect} bridge={bridge} context={context} />)}</div>
+      ? <div className="goods-grid goods-all-grid">{sortGoods(items, sort).map((item) => <GoodsCard key={item.key} item={item} event={event} onSelect={onSelect} bridge={bridge} />)}</div>
       : <p className="goods-empty">준비 중인 굿즈를 곧 소개할게요.</p>}
   </section>;
 }

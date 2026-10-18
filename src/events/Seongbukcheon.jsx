@@ -40,7 +40,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
     {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
     {dialog?.kind === 'rewards' && <RewardsDialog onClose={closeDialog} />}
     {dialog?.kind === 'policy' && <PolicyDialog goal={goal} stores={event.stampTour?.restaurants?.length ?? 0} period={period && longPeriodLabel(period.startDate, period.endDate)} onClose={closeDialog} />}
-    {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} bridge={bridge} context={context} />}
+    {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} event={event} note={giftshopNote(event)} onClose={closeDialog} bridge={bridge} />}
   </>;
   if (page === 'ranking') return <>
     <StampRankingPage event={event} bridge={bridge} onClose={closePage} />{dialogs}
@@ -49,7 +49,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
     <StampStoresPage event={event} bridge={bridge} goal={goal} progress={stamp.progress} onClose={closePage} />{dialogs}
   </>;
   if (page === 'goods') return <>
-    <GiftshopPage event={event} onSelect={openGoods} onClose={closePage} bridge={bridge} context={context} />{dialogs}
+    <GiftshopPage event={event} onSelect={openGoods} onClose={closePage} bridge={bridge} />{dialogs}
   </>;
   return <>
     <section className="hero type-banner" aria-label={`${content.banner.place} ${content.banner.titleLines.join(' ')}`}>
@@ -81,7 +81,7 @@ export default function Seongbukcheon({ event, bridge, context }) {
     <EventActivity event={event} bridge={bridge} />
     <EventCalendar event={event} heading={content.schedule.heading} period={period?.label} closure={content.closure}
       onSelect={(item) => setDialog({ kind: 'schedule', item })} />
-    <EventGiftshop event={event} onOpenPage={() => openPage('goods')} onSelect={openGoods} bridge={bridge} context={context} />
+    <EventGiftshop event={event} onOpenPage={() => openPage('goods')} onSelect={openGoods} bridge={bridge} />
     <footer className="brand-footer"><p>{content.footer.copy}</p><strong>{content.footer.brand}</strong></footer>
     {dialogs}
   </>;

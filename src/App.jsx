@@ -6,8 +6,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { createEventBridge } from './bridge/client';
 import { APP_HOME_LINK, appStoreUrl, inactiveRedirect, loadBrowserEvent } from './lib/events';
 import { eventPages } from './events';
+import GoodsRedirectPage from './components/GoodsRedirectPage';
+import { isGoodsStoreRequest } from './lib/goodsNavigation';
 
 export default function App() {
+  if (!window.ReactNativeWebView?.postMessage && isGoodsStoreRequest(window.location)) return <GoodsRedirectPage />;
+  return <EventApp />;
+}
+
+function EventApp() {
   const demo = useMemo(() => new URLSearchParams(window.location.search).get('preview') === '1' && !window.ReactNativeWebView ? createEventDemo() : null, []);
   const bridge = useMemo(() => demo?.bridge ?? createEventBridge(), [demo]);
   const eventRefresh = useMemo(() => createEventRefresh(), []);

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { GOODS_SORTS, canOpenGoodsStore, goodsStoreUrl, giftshopItems, giftshopNote, goodsPrice, sortGoods } from './goods.js';
+import { GOODS_SORTS, goodsStoreUrl, giftshopItems, giftshopNote, goodsPrice, sortGoods } from './goods.js';
+import { goodsStoreHref } from './goodsNavigation.js';
 
 const event = (giftshop) => ({ id: 1, giftshop });
 const photo = 'https://storage.googleapis.com/katsu-map-images/event-goods/1_a.jpg';
@@ -63,12 +64,11 @@ test('구매 URL은 자격정보 없는 https만 허용하고 누락·잘못된 
   }
 });
 
-test('일반 브라우저는 구매 링크를 표시하고 구버전 앱·목업은 지원 여부를 확인한다', () => {
-  assert.equal(canOpenGoodsStore({ isNative: false }, null), true);
-  const bridge = { isNative: true, share() {} };
-  for (const context of [null, {}, { capabilities: null }, { capabilities: 'share' }, { capabilities: ['navigation.open'] }]) {
-    assert.equal(canOpenGoodsStore(bridge, context), false);
-  }
-  assert.equal(canOpenGoodsStore(bridge, { capabilities: ['share'] }), true);
-  assert.equal(canOpenGoodsStore({ isNative: true }, { capabilities: ['share'] }), false);
+test('브라우저·앱 모두 공유 capability 없이 굿즈 구매 링크를 제공한다', () => {
+  const item = { key: 'keyring', linkUrl: 'https://smartstore.naver.com/katsumap/products/123' };
+  assert.equal(goodsStoreHref({ id: 1 }, item), item.linkUrl);
+  const native = new URL(goodsStoreHref({ id: 1 }, item, true));
+  assert.equal(native.hostname, 'event-welcome.vercel.app');
+  assert.equal(native.searchParams.get('goodsId'), 'keyring');
+  assert.equal(goodsStoreHref({ id: 1 }, { ...item, linkUrl: '' }, true), '');
 });

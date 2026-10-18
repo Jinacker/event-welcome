@@ -61,11 +61,11 @@ export function PolicyDialog({ goal, stores, period, onClose }) {
   </EventDialog>;
 }
 
-export function GoodsDialog({ item, note, onClose, bridge, context }) {
+export function GoodsDialog({ item, event, note, onClose, bridge }) {
   return <EventDialog title={item.name} className="goods-dialog" closeLabel="상품 사진 닫기" onClose={onClose}>
     {item.imageUrl && <img className="goods-dialog-image" src={item.imageUrl} alt={item.name} />}
     {item.price && <p className="goods-dialog-price">{item.price}</p>}
     {note && <p className="goods-dialog-note">{note}</p>}
-    <GoodsStoreLink item={item} bridge={bridge} context={context} />
+    <GoodsStoreLink item={item} event={event} bridge={bridge} />
   </EventDialog>;
 }

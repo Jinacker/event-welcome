@@ -81,13 +81,13 @@ close는 이벤트 레이어만 닫고 탭은 이동하지 않는다. navigate�
 
 굿즈의 `giftshop.items[].linkUrl`은 optional 구매 URL이다. 2048자 이하의 https 주소만 허용하며 자격정보·공백·제어문자·역슬래시가 있는 주소는 거부한다. 서버 저장 시 기존 굿즈에서 이 필드가 누락되면 기존 링크를 보존하고, null·빈 문자열은 링크를 지운다. 신규 굿즈에서 누락되면 구매 버튼 없이 표시한다.
 
-```js
-if (context?.capabilities?.includes('share')) {
-  await bridge.share(item.linkUrl);
-}
-```
+굿즈 카드·전체 목록의 사진·상품명과 `스토어에서 보기` 버튼은 구매 링크로 바로 연결한다. 링크가 없는 사진만 기존 확대 팝업을 연다. 공유창·복사 기능은 구매 동선에서 사용하지 않는다.
 
-굿즈 카드·전체 목록·상세 팝업에서 앱에는 `스토어 링크 공유·복사` 버튼을 표시해 기존 공유창으로 URL을 보낸다. 브라우저에는 `스토어에서 보기` 링크를 `target="_blank" rel="noopener noreferrer"`로 표시한다. 앱은 수정하지 않으며 WebView의 외부 탐색 차단을 유지한다. 앱 안에서 스토어를 한 번에 직접 여는 기능은 제공하지 않는다. 공유창에서 선택 가능한 앱·복사 메뉴는 OS에 따라 다르다. 공유 요청 실패는 안내와 재시도를 제공한다.
+- 일반 브라우저는 등록된 https URL을 새 탭으로 연다.
+- 앱은 `http://event-welcome.vercel.app/?eventId=…&openStore=1&goodsId=…`를 `_self` 링크로 누른다. 현재 앱의 `originWhitelist`는 https와 katsumap만 포함하며, 설치된 react-native-webview 13.16.1은 목록 밖 주소를 `Linking.canOpenURL` → `Linking.openURL`로 넘긴 뒤 WebView 탐색을 취소한다. 이 기존 동작을 사용하므로 앱 코드·브리지 기능을 추가하지 않는다.
+- 외부 브라우저에서 Vercel이 진입 주소를 HTTPS로 전환한다. 실제 배포 주소에서 HTTP 308과 query 보존을 확인했다. HTTPS 페이지는 공개 이벤트 설정에서 해당 이벤트·굿즈의 구매 URL을 찾아 바로 이동한다.
+- 진입 주소에는 공개 ID만 넣는다. 사용자 정보·인증 토큰·임의 목적지 URL을 넣지 않는다. query로 목적지 URL을 받아 이동하지 않는다. 설정 조회와 최종 스토어 주소는 HTTPS를 사용한다. 초기 HTTP 진입 자체는 암호화된 통신이 아니므로 이 주소에 비밀값을 추가하면 안 된다.
+- 이벤트 종료·상품 삭제·링크 미설정·잘못된 ID·네트워크 실패는 외부 브라우저에서 안내와 재시도를 제공한다. WebView와 일반 브라우저의 실제 OS 연결은 iOS·Android 실기 확인이 필요하다.
 
 ## 앱 화면 이동
 

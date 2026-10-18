@@ -9,12 +9,6 @@ export function goodsStoreUrl(value) {
   } catch { return ''; }
 }
 
-// 앱이 이미 지원하는 공유창으로 링크를 전달한다. 브라우저는 새 탭 링크를 쓴다.
-export function canOpenGoodsStore(bridge, context) {
-  return !bridge?.isNative || (Array.isArray(context?.capabilities)
-    && context.capabilities.includes('share') && typeof bridge.share === 'function');
-}
-
 // 관리자가 입력한 굿즈를 화면에서 쓸 형태로 정리한다. 이름이 없는 항목은 표시하지 않는다.
 export function giftshopItems(event) {
   const items = Array.isArray(event?.giftshop?.items) ? event.giftshop.items : [];
