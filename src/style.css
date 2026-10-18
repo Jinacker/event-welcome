@@ -351,6 +351,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .banner-venue{margin-top:16px;padding-top:11px;gap:5px 9px;}
 .banner-venue strong{font-size:11px;}
 .banner-venue>span{font-size:10px;}
+.banner-venue:link,.banner-venue:visited{align-items:center;flex-wrap:nowrap;gap:12px;text-decoration:none;color:inherit;}
+.banner-venue-logo{display:block;width:80px;height:auto;flex:0 0 80px;object-fit:contain;}
+.banner-venue>span{min-width:0;}
 @media(max-width:360px){.type-banner{padding:16px}.type-banner-top{margin-bottom:15px}.banner-main-row{gap:8px}.type-banner h1{font-size:25px}.banner-pills>span{padding:6px 8px;font-size:9px}.banner-venue{margin-top:14px}}
 .banner-pills{gap:8px;}
 .banner-pills>span{padding:8px 14px;font-size:12px;line-height:1.35;}

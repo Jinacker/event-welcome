@@ -13,6 +13,7 @@ import { giftshopNote } from '../lib/goods';
 import { calendarPeriod, longPeriodLabel } from '../lib/period';
 import * as content from './seongbukcheonContent';
 import { scheduleItems } from './seongbukcheonSchedule';
+import { venueHref } from '../lib/venueNavigation';
 
 const lines = (values) => values.map((line, index) => <React.Fragment key={line}>{index ? <br /> : null}{line}</React.Fragment>);
 
@@ -59,7 +60,11 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
         </div>
         <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
       </div>
-      <div className="banner-venue"><strong>{content.banner.venue.name}</strong><span>{content.banner.venue.address}</span></div>
+      <a className="banner-venue" data-browser-ok href={venueHref(bridge.isNative)}
+        target={bridge.isNative ? '_self' : '_blank'} rel="noopener noreferrer" aria-label="라운지 돌돌 위치 보기">
+        <img className="banner-venue-logo" src="/lounge-doldol-logo.png" alt={content.banner.venue.name} />
+        <span><strong>라운지 돌돌</strong> | {content.banner.venue.address}</span>
+      </a>
     </section>
     <section className="event-course">
       <div className="section-heading"><h2>{content.mapSection.heading}</h2></div>

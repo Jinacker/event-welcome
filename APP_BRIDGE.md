@@ -332,3 +332,8 @@ Android 뒤로가기나 기존 bridge.close()는 이벤트만 닫아 커뮤니�
 가게별 현황은 `event.stampTour.restaurants`의 목록·순서를 유지한다. 앱에서는 기존 `bridge.api('/map')`의 `restaurants`를 ID로 연결해 `recommendLevel`과 `category`를 표시한다. 앱과 같은 꽃 모양 별 아이콘·등급별 배지 색상을 사용하고, 분류는 받은 값을 그대로 표시한다. 부가 조회 실패 시 이름·스탬프 목록을 유지하며 별 등급·분류를 임의로 만들지 않는다.
 
 획득 여부는 기존 `/stamps`의 가게별 기록으로 판단한다. 오른쪽에 미획득은 빈 스탬프칸, 획득은 스탬프판과 같은 도장을 표시한다. 상태 글자는 화면에 표시하지 않고 접근성 이름으로만 제공한다. 조회 전에는 확인 중 안내를 유지한다. 획득·미획득 요약과 완주 안내 문장은 이 목록에서 제거한다.
+
+## 상단 라운지 돌돌 위치 링크
+
+상단 장소 영역은 `public/lounge-doldol-logo.png` 원본 로고와 기존 주소를 나란히 표시한다. 영역 전체는 `https://naver.me/FM94vb3l`로 연결한다.
+일반 브라우저는 HTTPS 링크를 새 탭으로 연다. 앱은 굿즈와 같은 기존 WebView 외부 브라우저 처리 경로를 사용해 `http://event-welcome.vercel.app/?openVenue=1`을 연다. HTTPS 전환 후 `VenueRedirectPage`가 고정 네이버 링크로 이동한다. query로 임의 목적지를 받지 않으며 사용자 정보·세션을 포함하지 않는다. 앱 코드와 브리지 프로토콜은 변경하지 않는다.

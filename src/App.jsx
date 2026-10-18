@@ -7,11 +7,13 @@ import { createEventBridge } from './bridge/client';
 import { APP_HOME_LINK, appStoreUrl, inactiveRedirect, loadBrowserEvent } from './lib/events';
 import { eventPages } from './events';
 import GoodsRedirectPage from './components/GoodsRedirectPage';
+import VenueRedirectPage from './components/VenueRedirectPage';
 import { isGoodsStoreRequest } from './lib/goodsNavigation';
 import { createEventNavigation } from './lib/eventNavigation';
 import { footer as brandFooter } from './events/seongbukcheonContent';
 
 export default function App() {
+  if (!window.ReactNativeWebView?.postMessage && new URLSearchParams(window.location.search).get('openVenue') === '1') return <VenueRedirectPage />;
   if (!window.ReactNativeWebView?.postMessage && isGoodsStoreRequest(window.location)) return <GoodsRedirectPage />;
   return <EventApp />;
 }
