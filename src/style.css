@@ -345,6 +345,8 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .type-banner-top{margin-bottom:17px;gap:6px 10px;}
 .banner-main-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px;}
 .type-banner-title{min-width:0;}
+.type-banner .banner-title-image{line-height:0;}
+.banner-title-image img{display:block;width:100%;height:auto;}
 .type-banner-place{font-size:11px;padding:3px 9px;margin-bottom:8px;}
 .type-banner h1{font-size:clamp(26px,7vw,36px);line-height:1.2;letter-spacing:-.055em;}
 .banner-pills{display:flex;flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:6px;margin:0;}

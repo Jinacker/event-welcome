@@ -55,8 +55,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
       <div className="type-banner-top"><p>{content.banner.collaboration}</p>{period && <span>{period.label}</span>}</div>
       <div className="banner-main-row">
         <div className="type-banner-title">
-          <span className="type-banner-place">{content.banner.place}</span>
-          <h1>{lines(content.banner.titleLines)}</h1>
+          <h1 className="banner-title-image"><img src="/seongbukcheon-title.png" alt="성북천 걸어서 돈가스 속으로" /></h1>
         </div>
         <div className="banner-pills" aria-label="행사 콘텐츠">{content.banner.pills.map((pill) => <span key={pill}>{pill}</span>)}</div>
       </div>
