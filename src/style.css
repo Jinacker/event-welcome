@@ -430,3 +430,13 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-page:has(.brand-footer) > footer { display: none; }
 /* 관리자가 일정 설명에 넣은 줄바꿈을 그대로 보여준다 */
 .event-dialog-info > p { white-space: pre-line; }
+
+/* 가게 목록: 앱의 별 배지·분류와 텍스트 없는 스탬프 상태. */
+.stores-page .stamp-restaurants button{flex-wrap:nowrap;gap:14px;background:var(--surface);color:var(--text);}
+.stamp-store-info{display:flex;align-items:center;flex-wrap:wrap;gap:7px;min-width:0;flex:1;}
+.stores-page .stamp-store-info .stamp-store-name{font-size:14px;font-weight:700;line-height:1.5;}
+.stores-page .stamp-store-info .stamp-store-rating{display:inline-flex;align-items:center;justify-content:center;gap:2px;padding:4px 8px;border-radius:12px;}
+.stores-page .stamp-store-info .stamp-store-category{padding:4px 8px;border-radius:12px;background:#FDFBF6;color:#d6483e;font-size:11px;font-weight:400;line-height:14px;}
+.stores-page .stamp-store-status{width:52px;height:52px;flex:0 0 52px;}
+.stores-page .stamp-store-status .earned-stamp-mark{padding:12%;}
+.stores-page .stamp-store-status .earned-stamp-mark>span{font-size:9px;font-weight:900;line-height:1.12;letter-spacing:-.07em;overflow-wrap:normal;}

@@ -44,7 +44,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     <StampRankingPage event={event} bridge={bridge} />{dialogs}
   </>;
   if (page === 'stores') return <>
-    <StampStoresPage event={event} bridge={bridge} goal={goal} progress={stamp.progress} />{dialogs}
+    <StampStoresPage event={event} bridge={bridge} progress={stamp.progress} />{dialogs}
   </>;
   if (page === 'goods') return <>
     <GiftshopPage event={event} onSelect={openGoods} bridge={bridge} />{dialogs}
