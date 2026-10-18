@@ -15,7 +15,7 @@
   -webkit-font-smoothing: antialiased;
 }
 * { box-sizing: border-box; }
-html { overscroll-behavior-y: contain; }
+html { overscroll-behavior-y: contain; touch-action: pan-x pan-y; }
 /* 앱 WebView는 네이티브 화면과 같은 탄성 스크롤을 쓴다. 브라우저는 당겨서 새로고침을 막기 위해 contain을 유지한다. */
 html[data-native='1'] { overscroll-behavior-y: auto; }
 body {
