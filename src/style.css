@@ -298,7 +298,8 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-secondary-actions button+button{position:relative;}
 .stamp-secondary-actions button+button:before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:1px;background:var(--border);}
 .policy-dialog .stamp-policy{padding-top:4px;}
-.map-editorial-note{margin:12px 0 0;font-size:11px;line-height:1.75;color:var(--muted);word-break:keep-all;overflow-wrap:anywhere}.stores-page .map-editorial-note{margin-bottom:18px}
+.map-editorial-note{margin:12px 0 0;font-size:11px;line-height:1.75;color:var(--muted);word-break:keep-all;overflow-wrap:anywhere;white-space:pre-line}.stores-page .map-editorial-note{margin-bottom:18px}
+.policy-note{white-space:pre-line;}
 
 .type-banner{position:relative;isolation:isolate;overflow:hidden;padding:21px 22px 28px;background:#1E3C62;border:0;border-radius:14px;color:#fff;}
 .type-banner:after{content:'';position:absolute;z-index:-1;right:-36px;bottom:-78px;width:210px;height:120px;border:1px solid #b2dee84d;border-radius:50%;transform:rotate(-12deg);}
