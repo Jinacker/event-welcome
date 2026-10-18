@@ -371,8 +371,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .banner-partners .banner-partner-seongbukcheon{width:100px;height:80px;padding:0;background:transparent;border-radius:0;}
 .banner-partner-hunter{display:flex;align-items:center;justify-content:center;gap:5px;margin-top:12px;}
 .banner-partner-hunter img{width:52px;height:52px;}
+.banner-partner-hunter span{color:#fff;font-size:14px;font-weight:800;line-height:1.2;letter-spacing:-.02em;}
 .banner-partners .banner-partner-cross{width:15px;height:15px;}
-@media(max-width:360px){.banner-partners .banner-partner-seongbukcheon{width:90px;height:72px;}.banner-partners .banner-partner-cross{width:13px;height:13px;}.banner-partner-hunter{margin-top:10px;}.banner-partner-hunter img{width:46px;height:46px;}.banner-side{gap:16px;}}
+@media(max-width:360px){.banner-partners .banner-partner-seongbukcheon{width:90px;height:72px;}.banner-partners .banner-partner-cross{width:13px;height:13px;}.banner-partner-hunter{margin-top:10px;}.banner-partner-hunter img{width:46px;height:46px;}.banner-partner-hunter span{font-size:13px;}.banner-side{gap:16px;}}
 
 .event-page>.stamp-tour{border-top:1px solid var(--border);padding-top:28px;}
 .calendar-day.lounge-closed{flex-direction:column;height:36px;gap:0}.calendar-day.lounge-closed>span{height:21px;color:var(--muted)}.lounge-closed>small{font-size:8px;line-height:12px;color:var(--muted)}.calendar-bar-sr{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}.event-schedule .calendar-event-bar:has(.calendar-bar-sr){align-self:stretch;min-height:22px;height:auto;padding:4px 3px}.calendar-day.lounge-closed{flex-direction:row;gap:0}.calendar-day.lounge-closed>span{height:25px}.calendar-closure{display:flex;align-items:center;justify-content:center;font-size:9px;line-height:1.4;color:var(--muted);padding:3px 0}
