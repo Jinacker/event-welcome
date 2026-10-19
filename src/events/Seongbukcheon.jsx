@@ -1,5 +1,5 @@
-import EventIcon from '../components/EventIcon';
 import React, { useLayoutEffect, useRef, useState } from 'react';
+import CoursePreviewPins from '../components/CoursePreviewPins';
 import StampTourBoard from '../components/StampTourBoard';
 import StampRankingPage from '../components/StampRankingPage';
 import StampStoresPage from '../components/StampStoresPage';
@@ -84,9 +84,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
       <div className="course-preview-wrap">
         <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
           <img className="course-design-map" src="/seongbukcheon-map-preview.webp" width="1074" height="600" alt="" aria-hidden="true" loading="lazy" decoding="async" />
-          <span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span>
-          <span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span>
-          <span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span>
+          <CoursePreviewPins />
           <span className="course-label">{content.mapSection.label}</span>
         </button>
         <img className="course-hiker" src="/course-hiker.png" alt="" aria-hidden="true" />
