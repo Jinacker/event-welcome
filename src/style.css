@@ -544,3 +544,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-schedule .calendar-weeks{border-top:1px solid #DCD8D3;}
 .event-schedule .calendar-week{border-top:0;border-bottom:1px solid #DCD8D3;}
 .event-schedule .calendar-week:last-child{border-bottom:0;}
+/* 럭키드로우 남은 수량은 관리자가 고친다. 품절은 흐리게, 마지막으로 고친 날은 목록 아래 작게 적는다. */
+.reward-inventory li.reward-sold-out>span{color:var(--muted);}
+.reward-inventory li.reward-sold-out>strong{color:var(--muted);font-weight:600;}
+.reward-stock-updated{margin:-14px 0 20px;font-size:11px;line-height:1.6;color:var(--muted);text-align:right;}

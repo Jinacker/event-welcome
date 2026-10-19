@@ -1,6 +1,7 @@
 import React from 'react';
 import EventDialog from './EventDialog';
 import { dateRangeLabel } from '../lib/period';
+import { rewardStock } from '../lib/rewards';
 import * as content from '../events/seongbukcheonContent';
 
 const lines = (values) => values.map((line, index) => <React.Fragment key={line}>{index ? <br /> : null}{line}</React.Fragment>);
@@ -38,12 +39,17 @@ export function ScheduleDialog({ item, native, onClose }) {
   </EventDialog>;
 }
 
-export function RewardsDialog({ onClose }) {
+export function RewardsDialog({ event, onClose }) {
+  // 남은 수량은 관리자 설정을 따른다. 설정이 없으면 기본 목록이 그대로 나온다.
+  const stock = rewardStock(event);
   return <EventDialog title={content.rewards.title} className="reward-dialog" closeLabel="선물 목록 닫기" onClose={onClose}>
     <p className="reward-value">{content.rewards.value}</p>
     <p className="reward-dialog-intro">{content.rewards.intro}<br /><small>{content.rewards.introNote}</small></p>
     <div className="reward-stock-heading">{content.rewards.stockHeading.map((label) => <span key={label}>{label}</span>)}</div>
-    <ul className="reward-inventory">{content.rewards.inventory.map((reward) => <li key={reward.name}><span>{reward.name}</span><strong>{reward.stock}</strong></li>)}</ul>
+    <ul className="reward-inventory">{stock.items.map((reward) => <li key={reward.name} className={reward.soldOut ? 'reward-sold-out' : undefined}>
+      <span>{reward.name}</span><strong>{reward.soldOut ? '품절' : reward.stock || '—'}</strong>
+    </li>)}</ul>
+    {stock.updatedLabel && <p className="reward-stock-updated">{stock.updatedLabel}</p>}
     <div className="reward-dialog-note">{content.rewards.notes.map((note) => <p key={note.text}>{note.heading && <><strong>{note.heading}</strong><br /></>}{note.text}</p>)}</div>
   </EventDialog>;
 }

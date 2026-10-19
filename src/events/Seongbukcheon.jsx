@@ -37,7 +37,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
   const openGoods = (item) => navigation.openDialog({ kind: 'goods', item });
   const dialogs = <>
     {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
-    {dialog?.kind === 'rewards' && <RewardsDialog onClose={closeDialog} />}
+    {dialog?.kind === 'rewards' && <RewardsDialog event={event} onClose={closeDialog} />}
     {dialog?.kind === 'policy' && <PolicyDialog goal={goal} stores={event.stampTour?.restaurants?.length ?? 0} period={period && longPeriodLabel(period.startDate, period.endDate)} onClose={closeDialog} />}
     {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} />}
   </>;
