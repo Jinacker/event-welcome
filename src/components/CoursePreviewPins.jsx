@@ -58,6 +58,7 @@ export default function CoursePreviewPins() {
       <path d="M0 0 8 4 0 8Z" fill="#1E3C62" />
     </marker></defs>
     <polyline className="course-preview-route" points={curvePoints(PINS[2], PINS[1])} markerEnd={`url(#${markerId})`} />
+    <polyline className="course-preview-route" points={curvePoints(PINS[1], PINS[0])} markerEnd={`url(#${markerId})`} />
     {PINS.map((pin, index) => <g key={index}>
       <circle className="course-preview-pin-frame" cx={pin.x} cy={pin.y} r={FRAME_RADIUS} />
       <svg x={pin.x - 12} y={pin.y - 15} width="24" height="30" viewBox="0 0 256 256">
