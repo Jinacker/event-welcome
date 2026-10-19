@@ -3,8 +3,8 @@ export const CONTACT_MAX_LENGTH = 900;
 export function contactError(error) {
   if (error?.code === '400') return '문의 내용을 확인해 주세요. 공백을 제외한 내용이 필요하며 최대 900자까지 보낼 수 있어요.';
   if (error?.code === '401') return '앱 인증을 확인하지 못했어요. 이벤트를 닫고 다시 열어주세요.';
-  if (error?.code === '410') return '종료된 이벤트에는 문의를 보낼 수 없어요. 인스타그램 DM으로 문의해 주세요.';
-  if (error?.code === '404' || error?.code === '503') return '지금은 문의를 보낼 수 없어요. 잠시 후 다시 시도하거나 인스타그램 DM으로 문의해 주세요.';
+  if (error?.code === '410') return '종료된 이벤트에는 문의를 보낼 수 없어요. 앱 설정의 ‘내 문의’를 이용해 주세요.';
+  if (error?.code === '404' || error?.code === '503') return '지금은 문의를 보낼 수 없어요. 잠시 후 다시 시도하거나 앱 설정의 ‘내 문의’를 이용해 주세요.';
   // 타임아웃은 저장 실패로 단정하지 않는다. 자동 재시도하면 같은 문의가 중복 저장될 수 있다.
   return '전송 결과를 확인하지 못했어요. 중복 전송을 피하려면 앱의 ‘내 문의’를 먼저 확인해 주세요.';
 }
