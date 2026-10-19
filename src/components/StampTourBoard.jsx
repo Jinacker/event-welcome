@@ -30,7 +30,7 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
   return <section className="stamp-tour" aria-label="스탬프 투어" data-browser-ok>
     <div className="stamp-reward-intro">
       <div className="stamp-reward-head">
-        <h3>{stampSection.rewardTitle}</h3>
+        <h3><img className="stamp-reward-title-image" src="/stamp-reward-title-retro.png" alt={stampSection.rewardTitle} /></h3>
         <button type="button" className="stamp-ranking-link" onClick={onOpenRanking}>랭킹</button>
       </div>
       <p className="stamp-prize-copy">{stampSection.prize}</p>

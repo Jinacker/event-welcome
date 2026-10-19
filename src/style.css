@@ -448,6 +448,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .stamp-reward-intro+.stamp-tour-heading{margin-top:18px;}
 .stamp-reward-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
 .stamp-reward-head h3{min-width:0;}
+.stamp-reward-head h3{flex:0 1 230px;margin:0;}
+.stamp-reward-title-image{display:block;width:100%;aspect-ratio:8.5 / 1;object-fit:cover;}
+.stamp-reward-intro>.stamp-prize-copy{margin-top:-2px;}
 .stamp-slot-reward{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:0 2px;}
 .stamp-slot-reward>b{font-size:12px;font-weight:700;line-height:1.2;}
 .stamp-slot-reward>small{font-size:8px;font-weight:800;line-height:1.15;letter-spacing:-.05em;color:var(--accent);text-align:center;word-break:keep-all;}
@@ -555,6 +558,7 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .reward-stock-updated{margin:-14px 0 20px;font-size:11px;line-height:1.6;color:var(--muted);text-align:right;}
 
 /* 산책 지도 제목 옆 접이식 지도 장식. */
+.course-section-heading{margin-bottom:4px;}
 .course-section-heading h2{flex:0 1 170px;min-width:0;}
 .course-title-image{display:block;width:100%;aspect-ratio:6 / 1;object-fit:cover;}
 .course-section-heading .course-heading-map{display:block;width:56px;height:56px;flex:0 0 56px;object-fit:contain;margin:-8px 6px -8px 0;position:relative;left:-14px;top:10px;transform:rotate(18deg);transform-origin:50% 75%;animation:course-map-wiggle 2.4s ease-in-out infinite;}
