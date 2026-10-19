@@ -553,3 +553,6 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .course-section-heading .course-heading-map{display:block;width:56px;height:56px;flex:0 0 56px;object-fit:contain;margin:-8px 6px -8px 0;position:relative;left:-14px;top:10px;transform:rotate(18deg);transform-origin:50% 75%;animation:course-map-wiggle 2.4s ease-in-out infinite;}
 @keyframes course-map-wiggle{0%,100%{transform:rotate(18deg);}25%{transform:rotate(12deg);}75%{transform:rotate(24deg);}}
 @media(prefers-reduced-motion:reduce){.course-section-heading .course-heading-map{animation:none;}}
+/* 관리자가 올린 도장 그림이 있으면 글자 도장 대신 그 그림을 찍는다. 기울기는 글자 도장과 같게 유지한다. */
+.stamp-slot.filled>.earned-stamp-image{position:absolute;inset:0;box-sizing:border-box;width:100%;height:100%;padding:3%;object-fit:contain;border-radius:0;background:transparent;transform:rotate(var(--stamp-angle,-7deg));}
+.stores-page .stamp-store-status>.earned-stamp-image{padding:0;}

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { stampSection, storeOrder, storesPage } from '../events/seongbukcheonContent';
 import { sortStores } from '../lib/storeOrder';
+import { stampImage } from '../lib/stamps';
 
 export default function StampStoresPage({ event, bridge, progress }) {
   const [error, setError] = useState('');
   const [details, setDetails] = useState([]);
   const restaurants = sortStores(event.stampTour?.restaurants ?? [], storeOrder);
   const received = new Set(progress?.stamps?.map((item) => item.restaurantId) ?? []);
+  // 스탬프판과 같은 도장을 쓴다. 관리자가 올린 그림이 없으면 글자 도장이다.
+  const mark = stampImage(event);
   const byId = new Map(details.map((restaurant) => [restaurant.id, restaurant]));
   useEffect(() => {
     let cancelled = false;
@@ -35,7 +38,9 @@ export default function StampStoresPage({ event, bridge, progress }) {
         </div>
         <div className={`stamp-slot stamp-store-status${earned ? ' filled' : ''}`} role="img"
           aria-label={!progress ? '스탬프 확인 중' : earned ? '스탬프 획득' : '스탬프 미획득'}>
-          {earned && <span className="earned-stamp-mark" aria-hidden="true">{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>}
+          {earned && (mark
+            ? <img className="earned-stamp-image" src={mark} alt="" aria-hidden="true" />
+            : <span className="earned-stamp-mark" aria-hidden="true">{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>)}
         </div>
       </button>;
     })}</div>

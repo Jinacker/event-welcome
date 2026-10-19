@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { stampBoard, stampGoal, stampSlots } from './stamps.js';
+import { stampBoard, stampGoal, stampImage, stampSlots } from './stamps.js';
 test('17칸 중 실제 받은 수만 순서대로 채운다', () => {
   assert.deepEqual(stampSlots(17, 3), [...Array(3).fill(true), ...Array(14).fill(false)]);
   assert.equal(stampSlots(17, 0).filter(Boolean).length, 0);
@@ -28,4 +28,17 @@ test('스탬프판은 목표 칸마다 획득 여부와 보상 문구를 담는�
   ]);
   assert.deepEqual(stampBoard(0, 0), []);
   assert.deepEqual(stampBoard(2, 0, null), [{ index: 0, filled: false, label: '' }, { index: 1, filled: false, label: '' }]);
+});
+
+test('도장 그림은 업로드 주소와 미리보기 경로만 쓰고 그 외에는 글자 도장으로 돌아간다', () => {
+  const url = 'https://storage.googleapis.com/katsu-map-images/launch-banners/events/1760000000000_a-b.png';
+  assert.equal(stampImage({ stampTour: { stampImageUrl: ` ${url} ` } }), url);
+  assert.equal(stampImage({ stampTour: { stampImageUrl: url.replace('.png', '.gif') } }), url.replace('.png', '.gif'));
+  assert.equal(stampImage({ stampTour: { stampImageUrl: '/demo-stamp.svg' } }), '/demo-stamp.svg');
+  for (const bad of [undefined, null, '', '   ', 1, 'https://evil.test/stamp.png', 'http://storage.googleapis.com/katsu-map-images/launch-banners/events/a.png',
+    url.replace('.png', '.jpg'), url.replace('events/', 'events/sub/'), 'javascript:alert(1)', '//evil.test/a.png', 'demo-stamp.svg']) {
+    assert.equal(stampImage({ stampTour: { stampImageUrl: bad } }), '');
+  }
+  assert.equal(stampImage(undefined), '');
+  assert.equal(stampImage({}), '');
 });

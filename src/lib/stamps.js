@@ -12,6 +12,13 @@ export function stampGoal(event) {
   return Number.isInteger(raw) && raw > 0 && raw <= 400 ? raw : restaurants;
 }
 
+// 관리자가 올린 도장 그림. 업로드 주소와 미리보기용 같은 출처 경로만 쓰고, 없으면 글자 도장을 찍는다.
+export function stampImage(event) {
+  const url = typeof event?.stampTour?.stampImageUrl === 'string' ? event.stampTour.stampImageUrl.trim() : '';
+  if (/^https:\/\/storage\.googleapis\.com\/katsu-map-images\/launch-banners\/events\/[a-zA-Z0-9_-]+\.(png|gif|svg)$/.test(url)) return url;
+  return /^\/[a-zA-Z0-9_-]+\.(png|gif|svg)$/.test(url) ? url : '';
+}
+
 // 스탬프판 한 칸씩의 상태와 보상 안내 문구(마일스톤)를 함께 돌려준다.
 export function stampBoard(goal, earned, milestones) {
   const labels = milestones && typeof milestones === 'object' ? milestones : {};

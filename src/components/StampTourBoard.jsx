@@ -1,5 +1,5 @@
 import React from 'react';
-import { stampBoard } from '../lib/stamps';
+import { stampBoard, stampImage } from '../lib/stamps';
 import { appStoreUrl } from '../lib/events';
 import { stampSection } from '../events/seongbukcheonContent';
 
@@ -14,11 +14,15 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
   const board = stampBoard(goal, earned, stampSection.milestones);
   const total = Math.max(1, board.length);
   const remaining = Math.max(0, board.length - earned);
+  // 관리자가 올린 도장 그림이 있으면 그걸 찍고, 없으면 기존 글자 도장을 그대로 쓴다.
+  const mark = stampImage(event);
   // 보상 칸은 번호 아래에 받는 추첨권까지 칸 안에 적는다.
   const slot = ({ index, filled, label }) => <div key={index} className={`stamp-slot ${filled ? 'filled' : ''}`.trim()}
     aria-label={`${index + 1}번째 ${filled ? '획득' : '빈'} 스탬프${label ? ` · ${label}` : ''}`} style={filled ? { '--stamp-angle': `${ANGLES[index % ANGLES.length]}deg` } : undefined}>
     {filled
-      ? <span className="earned-stamp-mark" role="img" aria-label={`${stampSection.mark.join(' ')} 도장`}>{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>
+      ? mark
+        ? <img className="earned-stamp-image" src={mark} alt="" aria-hidden="true" />
+        : <span className="earned-stamp-mark" role="img" aria-label={`${stampSection.mark.join(' ')} 도장`}>{stampSection.mark.map((line) => <span key={line}>{line}</span>)}</span>
       : label
         ? <span className="stamp-slot-reward"><b>{index + 1}</b><small>{label}</small></span>
         : <span>{index + 1}</span>}
