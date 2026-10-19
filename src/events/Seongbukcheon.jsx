@@ -83,7 +83,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
       <p className="map-intro-copy">{lines(content.mapSection.intro)}</p>
       <div className="course-preview-wrap">
         <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
-          <div className="river" />
+          <img className="course-design-map" src="/seongbukcheon-map-preview.webp" width="1074" height="600" alt="" aria-hidden="true" loading="lazy" decoding="async" />
           <span className="course-pin pin-one"><EventIcon name="pin" size={24} filled /></span>
           <span className="course-pin pin-two"><EventIcon name="pin" size={24} filled /></span>
           <span className="course-pin pin-three"><EventIcon name="pin" size={24} filled /></span>

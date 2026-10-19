@@ -145,9 +145,8 @@ svg { flex-shrink: 0; }
 .calendar-event-bar { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border-radius: 4px; padding: 0 4px; text-align: center; font-size: 10px; font-weight: 600; line-height: 19px; }
 .calendar-event-bar.continues-before { border-top-left-radius: 0; border-bottom-left-radius: 0; }
 .calendar-event-bar.continues-after { border-top-right-radius: 0; border-bottom-right-radius: 0; }
-.course-preview { height: 184px; width: 100%; position: relative; overflow: hidden; display: block; border: 1px solid #DCD8D3; border-radius: 16px; background: #B2DEE8; text-align: left; }
-.course-preview::before { content: ''; position: absolute; inset: 116px -50px 0; background: #DCD8D3; transform: rotate(14deg); }
-.river { position: absolute; top: -20%; left: 48%; width: 38px; height: 150%; background: #1e3c6238; transform: rotate(8deg); }
+.course-preview { height: 184px; width: 100%; position: relative; overflow: hidden; display: block; border: 1px solid #DCD8D3; border-radius: 16px; padding: 0; background: #FDFBF6; text-align: left; }
+.course-design-map { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
 .course-pin { position: absolute; display: grid; place-items: center; width: 38px; height: 38px; background: #fff; border: 1px solid #DCD8D3; color: var(--accent); border-radius: 50%; box-shadow: 0 3px 9px #21221c10; }
 .pin-one { left: 16%; top: 22%; }
 .pin-two { right: 21%; top: 34%; }
