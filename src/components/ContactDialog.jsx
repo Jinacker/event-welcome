@@ -46,7 +46,7 @@ export default function ContactDialog({ bridge, onClose }) {
         </div> : <form onSubmit={submit} aria-busy={sending}>
           <label htmlFor="event-contact-content">문의 내용</label>
           <textarea id="event-contact-content" value={content} onChange={(action) => setContent(action.target.value)}
-            rows={5} required disabled={sending} aria-describedby="event-contact-help event-contact-count"
+            rows={2} required disabled={sending} aria-describedby="event-contact-help event-contact-count"
             placeholder="궁금한 점이나 불편했던 내용을 적어주세요." />
           <p id="event-contact-count" className="contact-count" aria-live="off">{length} / {CONTACT_MAX_LENGTH}자</p>
           <p id="event-contact-help" className="contact-help">앱 계정으로 접수되며, 답변은 앱의 ‘내 문의’에서 확인할 수 있어요. 화면 사진은 인스타그램 DM으로 보내주세요.</p>
