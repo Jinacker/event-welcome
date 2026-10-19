@@ -30,7 +30,7 @@ export default function EventActivity({ event, bridge }) {
   }, [event.id, bridge, attempt, eventRefresh]);
   const navigate = (target, params) => bridge.navigate(target, params).catch(() => setNavigationError('화면을 열지 못했어요. 다시 시도해주세요.'));
   return <section className="event-activity" aria-label={activity.heading}>
-    <div className="section-heading feed-heading"><h2>{activity.heading}</h2><img className="feed-heading-duck" src="/duck-sticker.png" alt="" aria-hidden="true" /></div>
+    <div className="section-heading feed-heading"><h2>{activity.heading}</h2></div>
     {!bridge.isNative && <button type="button" className="section-empty app-feature-link">돈가스 지도에서 성북천 이야기 보기 ›</button>}
     {bridge.isNative && !feed && !error && <p className="section-empty" role="status">피드를 불러오고 있어요.</p>}
     {feed?.length === 0 && <p className="section-empty">이번 주 성북천 이야기를 기다리고 있어요.</p>}

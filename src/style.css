@@ -7,8 +7,6 @@
   --muted: #6b6b62;
   --inactive: #9a9a8e;
   --border: #DCD8D3;
-  /* 종이 질감 세기. 0이면 질감 없음, 0.4 기준으로 올리면 거친 인쇄물에 가까워진다. */
-  --paper-grain: .4;
   /* 도장 그림 크기. 1이면 빈 칸과 같고, 올리면 칸 밖으로 넘쳐 더 커 보인다(1.2 넘으면 옆 칸과 겹침). */
   --stamp-image-scale: 1.15;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
@@ -258,10 +256,6 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .calendar-month+.calendar-month .calendar-card{padding-top:16px;}
 .event-activity{margin:32px 0 0;}
 .feed-heading{margin-top:0;}
-/* 오리 스티커는 제목 줄 오른쪽에 띄워 올려 레이아웃 공간을 차지하지 않는다. */
-.feed-heading{position:relative;}
-.feed-heading-duck{position:absolute;right:12px;top:28%;width:auto;height:66px;transform:translateY(-50%) rotate(-7deg);pointer-events:none;z-index:1;}
-@media(max-width:360px){.feed-heading-duck{right:10px;height:58px;}}
 .hot-feed-card{border:0;border-radius:0;padding:0;background:transparent;}
 @media(max-width:360px){.hero h1{font-size:26px;}.hero-event-logo{width:64px;height:64px;}.hero-content{gap:8px;}.stamp-tour{padding:0;}.stamp-summary>div{gap:9px;}.stamp-summary strong{font-size:25px;}.stamp-tour .stamp-grid{gap:9px;}}
 
@@ -521,22 +515,15 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .sticker-sando{left:13%;top:38px;height:60px;}
 .sticker-taco{top:-18px;right:2px;height:58px;}
 @media(max-width:360px){.sticker-glass{left:10px;top:34px;height:54px;}.sticker-sando{top:34px;height:52px;}.sticker-taco{top:-15px;height:50px;}}
-.goods-item{position:relative;}
-.goods-sticker{position:absolute;width:auto;pointer-events:none;-webkit-user-drag:none;}
-.sticker-shirt{top:-12px;right:-10px;height:54px;transform:rotate(-8deg);}
-.sticker-duck{left:-12px;top:60%;height:68px;transform:translateY(-50%) rotate(7deg);}
-@media(max-width:360px){.sticker-shirt{top:-10px;right:-8px;height:46px;}.sticker-duck{left:-10px;height:58px;}}/* 성북천 오리부터 기프트숍까지 장식 스티커가 느리게 좌우로 까딱인다. 각자 주기를 달리해 따로 논다. */
+/* 장식 스티커가 각자 다른 주기로 느리게 좌우로 까딱인다. */
 @keyframes sticker-sway{0%,100%{transform:var(--sway-base,translate(0)) rotate(-5deg);}50%{transform:var(--sway-base,translate(0)) rotate(5deg);}}
 /* 도장처럼 덜 흔들려야 하는 스티커는 작은 진폭을 따로 쓴다. */
 @keyframes sticker-sway-soft{0%,100%{transform:var(--sway-base,translate(0)) rotate(-2deg);}50%{transform:var(--sway-base,translate(0)) rotate(2deg);}}
-.feed-heading-duck,.calendar-sticker,.goods-sticker,.stamp-heading-stamp{animation:sticker-sway 5s ease-in-out infinite;transform-origin:50% 80%;}
-.feed-heading-duck{--sway-base:translateY(-50%) rotate(-7deg);animation-duration:5.6s;}
+.calendar-sticker,.stamp-heading-stamp{animation:sticker-sway 5s ease-in-out infinite;transform-origin:50% 80%;}
 .sticker-glass{--sway-base:rotate(9deg);animation-duration:4.8s;animation-delay:-1.2s;transform-origin:50% 95%;}
 .sticker-taco{animation-duration:6.2s;animation-delay:-2.4s;}
 .sticker-sando{animation-duration:5.4s;animation-delay:-3.1s;}
-.sticker-shirt{--sway-base:rotate(-8deg);animation-duration:5.9s;animation-delay:-.8s;transform-origin:50% 15%;}
-.sticker-duck{--sway-base:translateY(-50%) rotate(7deg);animation-duration:6.6s;animation-delay:-2s;transform-origin:50% 8%;}
-@media (prefers-reduced-motion: reduce){.feed-heading-duck,.calendar-sticker,.goods-sticker,.stamp-heading-stamp{animation:none;}}
+@media (prefers-reduced-motion: reduce){.calendar-sticker,.stamp-heading-stamp{animation:none;}}
 .stamp-tour-heading{position:relative;}
 .stamp-heading-stamp{position:absolute;right:26px;bottom:-2px;width:auto;height:58px;transform:rotate(7deg);pointer-events:none;-webkit-user-drag:none;--sway-base:rotate(7deg);animation-name:sticker-sway-soft;animation-duration:5.2s;animation-delay:-1.6s;transform-origin:50% 90%;}
 @media(max-width:360px){.stamp-heading-stamp{right:20px;height:50px;}}
@@ -566,5 +553,3 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 @media(prefers-reduced-motion:reduce){.course-section-heading .course-heading-map{animation:none;}}
 /* 관리자가 올린 도장 그림이 있으면 글자 도장 대신 그 그림을 찍는다. 기울기는 글자 도장과 같게 유지한다. */
 .stamp-slot.filled>.earned-stamp-image{position:absolute;inset:0;box-sizing:border-box;width:100%;height:100%;padding:0;object-fit:contain;border-radius:0;background:transparent;transform:rotate(var(--stamp-angle,-7deg)) scale(var(--stamp-image-scale,1.15));}
-/* 레트로 인쇄물 느낌으로 종이 질감을 덮는다. 화면이 아니라 종이에 인쇄된 것처럼 보이도록 문서 전체에 깔아 스크롤과 함께 움직인다. 터치는 통과시킨다. */
-body::after{content:'';position:absolute;inset:0;z-index:40;pointer-events:none;opacity:var(--paper-grain,.4);mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");}
