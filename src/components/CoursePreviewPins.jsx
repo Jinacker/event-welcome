@@ -52,13 +52,16 @@ function curvePoints(startBody, targetBody) {
 
 export default function CoursePreviewPins() {
   const markerId = `course-preview-arrow-${useId().replace(/:/g, '')}`;
+  const exitStartOffset = (FRAME_RADIUS + .5) / Math.SQRT2;
 
   return <svg className="course-preview-pins" viewBox="0 0 350 200" aria-hidden="true">
     <defs><marker id={markerId} viewBox="0 0 8 8" refX="0" refY="4" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto">
       <path d="M0 0 8 4 0 8Z" fill="#1E3C62" />
     </marker></defs>
+    <polyline className="course-preview-route" points={curvePoints({ x: 700, y: 45 }, PINS[2])} markerEnd={`url(#${markerId})`} />
     <polyline className="course-preview-route" points={curvePoints(PINS[2], PINS[1])} markerEnd={`url(#${markerId})`} />
     <polyline className="course-preview-route" points={curvePoints(PINS[1], PINS[0])} markerEnd={`url(#${markerId})`} />
+    <path className="course-preview-route" d={`M${PINS[0].x - exitStartOffset} ${PINS[0].y - exitStartOffset} C43 22 18 12 18 -14 L18 -200`} markerEnd={`url(#${markerId})`} />
     {PINS.map((pin, index) => <g key={index}>
       <circle className="course-preview-pin-frame" cx={pin.x} cy={pin.y} r={FRAME_RADIUS} />
       <svg x={pin.x - 12} y={pin.y - 15} width="24" height="30" viewBox="0 0 256 256">
