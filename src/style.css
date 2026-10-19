@@ -556,3 +556,5 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 /* 관리자가 올린 도장 그림이 있으면 글자 도장 대신 그 그림을 찍는다. 기울기는 글자 도장과 같게 유지한다. */
 .stamp-slot.filled>.earned-stamp-image{position:absolute;inset:0;box-sizing:border-box;width:100%;height:100%;padding:3%;object-fit:contain;border-radius:0;background:transparent;transform:rotate(var(--stamp-angle,-7deg));}
 .stores-page .stamp-store-status>.earned-stamp-image{padding:0;}
+/* 레트로 인쇄물 느낌으로 화면 전체에 종이 질감을 아주 옅게 덮는다. 터치는 통과시키고(pointer-events:none) 다이얼로그(z-index 30) 위에도 같은 질감이 올라간다. */
+body::after{content:'';position:fixed;inset:0;z-index:40;pointer-events:none;opacity:.08;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");}
