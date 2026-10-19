@@ -52,6 +52,17 @@ export const rewards = {
   ],
 };
 
+export const contact = {
+  title: '운영 문의',
+  intro: '스탬프 적립, 럭키드로우 추첨권, 선물 수령, 전시·팝업에 대해 궁금한 점이 있다면 문의해 주세요.',
+  instagram: '인스타그램 @katz_map DM',
+  help: '스탬프·추첨권 관련 문의 시 앱 닉네임과 해당 화면을 함께 보내주시면 확인에 도움이 됩니다.',
+  venueTitle: '전시 및 선물 수령 장소',
+  venue: '라운지돌돌 · 서울시 성북구 성북로 62 2층',
+  hours: '11:00–19:00 · 매주 월요일 휴무',
+  notice: '지도에 소개된 가게에서는 이벤트 문의를 받지 않습니다. 이벤트 관련 문의는 운영 측으로 부탁드립니다.',
+};
+
 export const policy = {
   title: '스탬프 참여 방법',
   notes: [

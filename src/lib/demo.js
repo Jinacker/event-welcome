@@ -26,7 +26,7 @@ export function createEventDemo() {
     { rank: 3, userId: 3, nickname: '[목업] 카츠탐험가', stampCount: 4, isProfilePublic: true },
     { rank: 4, userId: 4, nickname: '[목업] 미리보기', stampCount: 3, isProfilePublic: true, isMe: true }], me: null };
   const context = { event, user: { id: 4, nickname: '[목업] 미리보기' }, navigationTargets: ['event_map'] };
-  const bridge = { isNative: true, getContext: async () => context,
+  const bridge = { isNative: true, isPreview: true, getContext: async () => context,
     api: async (path) => {
       if (path === '/context') return context;
       if (path === '/ranking') return ranking;

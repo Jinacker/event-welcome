@@ -1,6 +1,6 @@
 # 앱 ↔ 이벤트 웹 연결 가이드
 
-2026-10-18 코드 기준. 이벤트 화면을 만드는 에이전트가 먼저 읽는 공용 브리지 설명서다.
+2026-10-19 코드 기준. 이벤트 화면을 만드는 에이전트가 먼저 읽는 공용 브리지 설명서다.
 실제 배포 주소는 `https://event-welcome.vercel.app`이다. 이 저장소에서는 README를 만들지 않는다.
 
 ## 시작 위치
@@ -123,6 +123,17 @@ const result = await bridge.api('/context');
 // 현재 로그인된 앱 세션 사용자의 스탬프 조회 (적립 POST API는 제공하지 않음)
 const progress = await bridge.api('/stamps');
 // { eventId, total, earned, stamps: [{ id, restaurantId, restaurantName, earnedAt }] }
+
+// 활성 이벤트 운영 문의. 작성자와 문의 종류는 서버에서 세션·question으로 고정한다.
+const message = await bridge.api('/messages', {
+  method: 'POST', data: { content: '스탬프 적립 내역을 확인해 주세요.' },
+});
+// 기존 Message 응답: { id, userId, type, content, reply, isRead, createdAt, updatedAt }
+// 앞뒤 공백 제거 후 1~900자. 저장 내용 앞에 [이벤트 #<ID> 운영문의]가 붙는다.
+// 기존 앱의 내 문의와 관리자 문의 목록에서 조회·답변하며 기존 답변 알림을 사용한다.
+// 서버의 이벤트 문의 경로를 먼저 배포해야 한다. 앱 코드/브리지 업데이트는 필요 없다.
+// 중복 클릭은 웹에서 차단하지만 서버는 요청마다 새 문의를 만든다. 자동 재시도하지 않는다.
+// 타임아웃/응답 유실 시 내 문의를 먼저 확인한다. 사진 첨부는 지원하지 않는다.
 ```
 
 `bridge.api('/context')`는 앱이 `/api/v1/events/<현재 이벤트 ID>/api/context`를 요청한다.
@@ -143,6 +154,7 @@ path는 `/stamps/list`처럼 영문·숫자·underscore·hyphen으로 된 상대
 | GET /api/v1/events/:id/api/feed | 이번 주(KST 월요일 기준) 스탬프 지급 원본 중 공개·미삭제 기록 반응 TOP 10 |
 | GET /api/v1/events/:id/api/map | 활성 투어 참여 가게의 기존 지도 DTO와 초기 시점 |
 | GET /api/v1/events/:id/api/stamps | 현재 세션 사용자만의 적립 내역·총 칸 수 조회. 활성 상태 필요 |
+| POST /api/v1/events/:id/api/messages | 세션 사용자로 운영 문의 접수. 활성 상태 필요. body는 content(1~900자), 기존 Message 응답·201 사용 |
 
 스탬프는 기존 앱의 새 공개 기록 저장 시 서버에서 자동 적립한다. 사진 1장 이상, 후기 앞뒤 공백 제거 후 Unicode 문자 30개 이상,
 활성 이벤트의 참여 가게 조건을 모두 만족해야 한다. 기존 photoUrl과 새 photoUrls 모두 지원한다.
@@ -176,6 +188,7 @@ StampTourBoard는 참여 가게 수만큼 칸을 만들고 실제 earned 수만 
 자동 재적립 작업은 없으므로 해당 장애는 스탬프판 재조회와 문의·서버 운영 확인이 필요하다.
 새 서버 기능을 `/events/:id/api/...` 아래에 추가하면 이 브리지로 앱 업데이트 없이 호출할 수 있다.
 새 쓰기 API는 서버에서 세션 인증, 실제 참여 권한·입력 검증·중복 처리와 requireActive를 적용해야 한다.
+운영 문의는 스탬프 적립 여부에 관계없이 세션 사용자면 접수할 수 있다. 일반 브라우저는 토큰이 없어 접수하지 않고 인스타그램 DM 안내를 보여준다. `preview=1` 목업에서는 전송을 막는다.
 
 ## NFC·QR·진입 정보
 

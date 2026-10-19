@@ -9,6 +9,7 @@ import EventGiftshop from '../components/EventGiftshop';
 import GiftshopPage from '../components/GiftshopPage';
 import { useStampProgress } from '../components/useStampProgress';
 import { GoodsDialog, PolicyDialog, RewardsDialog, ScheduleDialog } from '../components/EventDialogs';
+import ContactDialog from '../components/ContactDialog';
 import { giftshopNote } from '../lib/goods';
 import { calendarPeriod, longPeriodLabel } from '../lib/period';
 import * as content from './seongbukcheonContent';
@@ -39,6 +40,7 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     {dialog?.kind === 'schedule' && <ScheduleDialog item={dialog.item} native={bridge.isNative} onClose={closeDialog} />}
     {dialog?.kind === 'rewards' && <RewardsDialog event={event} onClose={closeDialog} />}
     {dialog?.kind === 'policy' && <PolicyDialog goal={goal} stores={event.stampTour?.restaurants?.length ?? 0} period={period && longPeriodLabel(period.startDate, period.endDate)} onClose={closeDialog} />}
+    {dialog?.kind === 'contact' && <ContactDialog bridge={bridge} onClose={closeDialog} />}
     {dialog?.kind === 'goods' && <GoodsDialog key={dialog.item.key} item={dialog.item} note={giftshopNote(event)} onClose={closeDialog} />}
   </>;
   if (page === 'ranking') return <>
@@ -93,7 +95,8 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
     </section>
     <StampTourBoard event={event} bridge={bridge} goal={goal} stamp={stamp} nickname={nickname}
       onOpenRanking={() => openPage('ranking')} onOpenStores={() => openPage('stores')}
-      onOpenRewards={() => navigation.openDialog({ kind: 'rewards' })} onOpenPolicy={() => navigation.openDialog({ kind: 'policy' })} />
+      onOpenRewards={() => navigation.openDialog({ kind: 'rewards' })} onOpenPolicy={() => navigation.openDialog({ kind: 'policy' })}
+      onOpenContact={() => navigation.openDialog({ kind: 'contact' })} />
     <EventActivity event={event} bridge={bridge} />
     <EventCalendar heading={content.schedule.heading} period={period?.label}
       onSelect={(item) => navigation.openDialog({ kind: 'schedule', item })} />

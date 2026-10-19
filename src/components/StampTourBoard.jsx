@@ -6,7 +6,7 @@ import { stampSection } from '../events/seongbukcheonContent';
 // 도장이 똑같이 찍히지 않도록 칸마다 기울기를 조금씩 다르게 준다.
 const ANGLES = [-7, -4, -10, -6, -9, -3, -8, -5, -11, -6];
 
-export default function StampTourBoard({ event, bridge, goal, stamp, nickname, onOpenRanking, onOpenStores, onOpenRewards, onOpenPolicy }) {
+export default function StampTourBoard({ event, bridge, goal, stamp, nickname, onOpenRanking, onOpenStores, onOpenRewards, onOpenPolicy, onOpenContact }) {
   const tour = event.stampTour;
   if (!tour?.enabled) return null;
   const { progress, error, loading, refresh } = stamp;
@@ -62,6 +62,7 @@ export default function StampTourBoard({ event, bridge, goal, stamp, nickname, o
     <div className="stamp-secondary-actions">
       <button type="button" onClick={onOpenRewards}>선물 안내</button>
       <button type="button" onClick={onOpenPolicy}>참여 방법</button>
+      <button type="button" onClick={onOpenContact}>운영문의</button>
     </div>
   </section>;
 }
