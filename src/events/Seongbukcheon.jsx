@@ -75,7 +75,9 @@ export default function Seongbukcheon({ event, bridge, context, navigation, navi
       </a>
     </section>
     <section className="event-course">
-      <div className="section-heading"><h2>{content.mapSection.heading}</h2></div>
+      <div className="section-heading course-section-heading"><h2>{content.mapSection.heading}</h2>
+        <img className="course-heading-map" src="/retro-folded-map.png" alt="" aria-hidden="true" />
+      </div>
       <p className="map-intro-copy">{lines(content.mapSection.intro)}</p>
       <div className="course-preview-wrap">
         <button className="course-preview" aria-label={`${content.mapSection.heading} 보기`} onClick={openMap}>
