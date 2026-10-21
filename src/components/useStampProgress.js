@@ -1,4 +1,5 @@
 import { useEventRefresh } from './EventRefreshContext';
+import { useEventInitialLoad } from './EventReadyGate';
 import { singleFlight } from '../lib/refresh';
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,6 +12,7 @@ export function useStampProgress(event, bridge) {
   const [progress, setProgress] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  useEventInitialLoad(enabled && bridge.isNative && progress === null && !error);
   const refresh = async () => {
     if (!bridge.isNative) return;
     setLoading(true);

@@ -1,4 +1,5 @@
 import EventIcon from './EventIcon';
+import { useEventInitialLoad } from './EventReadyGate';
 import { formatRelativeTime } from '../lib/relativeTime';
 import { useEventRefresh } from './EventRefreshContext';
 import { singleFlight } from '../lib/refresh';
@@ -13,6 +14,7 @@ export default function EventActivity({ event, bridge }) {
   const [attempt, setAttempt] = useState(0);
   const [page, setPage] = useState(0);
   const [navigationError, setNavigationError] = useState('');
+  useEventInitialLoad(bridge.isNative && feed === null && !error);
   useEffect(() => {
     let stopped = false;
     const load = singleFlight(async () => {
