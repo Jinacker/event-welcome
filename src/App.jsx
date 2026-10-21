@@ -50,6 +50,11 @@ function EventApp() {
     try { await bridge.close(); }
     catch { setCloseError('이벤트를 닫지 못했어요. 다시 시도해주세요.'); }
   };
+  const openNewRecord = async () => {
+    setCloseError('');
+    try { await bridge.navigate('new_record'); }
+    catch { setCloseError('기록 작성 화면을 열지 못했어요. 다시 시도해주세요.'); }
+  };
   useEffect(() => {
     let stopped = false;
     const load = async () => {
@@ -87,6 +92,9 @@ function EventApp() {
       <div className="brand-footer-copy">{brandFooter.copy.map((line, index) => <p key={line}>{line}{index === brandFooter.copy.length - 1 && <strong>{brandFooter.brand}</strong>}</p>)}</div>
     </footer>
     {closeError && <p className="event-close-error" role="alert">{closeError}</p>}
+    <button type="button" className="event-home-fab event-record-fab" data-platform={context?.platform} disabled={Boolean(demo)} aria-label="기록 남기기" title="기록 남기기" onClick={openNewRecord}>
+      <EventIcon name="pencil" size={context?.platform === 'android' ? 22 : 24} />
+    </button>
     <button className="event-home-fab" data-platform={context?.platform} data-browser-ok={canGoBack || undefined} disabled={Boolean(demo) && !canGoBack} aria-label={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} title={canGoBack ? '이전 화면으로 돌아가기' : '이벤트 닫기'} onClick={closeEvent}>
       <EventIcon name="undo" size={context?.platform === 'android' ? 23 : 25} filled />
     </button>

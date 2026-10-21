@@ -170,7 +170,9 @@ footer { margin-top: 32px; font-size: 10px; text-align: center; color: var(--ina
 .event-home-fab { position: fixed; right: max(22px, calc((100vw - 520px) / 2 + 22px)); bottom: calc(24px + env(safe-area-inset-bottom, 0px)); z-index: 20; width: 48px; height: 48px; border: 0; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: #fff; box-shadow: 0 2px 6px #0003; }
 .event-home-fab:active { opacity: .85; }
 .event-home-fab[data-platform="android"] { width: 44px; height: 44px; }
-.event-close-error { position: fixed; z-index: 21; left: 50%; bottom: calc(78px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(calc(100% - 32px), 488px); margin: 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--accent); font-size: 12px; text-align: center; }
+.event-record-fab { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+.event-record-fab[data-platform="android"] { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+.event-close-error { position: fixed; z-index: 21; left: 50%; bottom: calc(138px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); width: min(calc(100% - 32px), 488px); margin: 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--accent); font-size: 12px; text-align: center; }
 .demo-notice { margin-bottom: 18px; padding: 11px 14px; border: 1px solid #e8ddc4; border-radius: 10px; background: #fbf4e4; color: #8a7450; font-size: 11px; line-height: 1.7; }
 @media (max-width: 360px) {
   .event-page { padding-right: 16px; padding-left: 16px; }

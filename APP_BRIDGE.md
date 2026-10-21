@@ -97,6 +97,7 @@ await bridge.navigate('encyclopedia_post', { postId: 9 });
 await bridge.navigate('profile', { userId: 123 });
 await bridge.navigate('event', { eventId: 2 });
 await bridge.navigate('home');
+await bridge.navigate('new_record'); // 커뮤니티의 펜 버튼과 같은 새 기록 작성창
 ```
 
 | target | 필요한 params |
@@ -298,6 +299,8 @@ if (context.navigationTargets?.includes('event_map')) {
 앱 즐겨찾기 지도의 원형·그림자·Material Design Icons arrow-u-left-top을 사용하고, 배경은 앱 키 컬러(#d6483e), 화살표는 흰색이다.
 크기는 iOS48px/Android44px이며 context.platform으로 구분한다. 오른쪽 여백은22px이다. 목업에서는 홈의 닫기만 비활성화하고 내부 화면의 뒤로가기는 사용할 수 있다. 일반 브라우저에서는 아래 스토어 안내 정책을 적용한다.
 브리지 닫기 실패는 오류를 표시하고 이벤트에 머문다. 비활성 안내 후 2초 자동 홈 이동과 오류 화면의 앱 열기 링크는 기존 정책을 유지한다.
+
+뒤로가기 버튼 바로 위에는 같은 크기의 펜 버튼을 12px 간격으로 표시한다. 기존 `bridge.navigate('new_record')`를 호출해 이벤트를 닫고 커뮤니티 펜 버튼과 같은 새 기록 작성창을 연다. 새 앱 목적지·프로토콜·서버 API를 추가하지 않는다. 이동 실패 시 오류를 표시하며, 일반 브라우저에서는 기존 스토어 안내 정책을 적용하고 목업에서는 비활성화한다.
 
 성북천 피드 카드는 앱 HotFeedCard처럼 사진과 가게·별점·후기를 좌우로 배치하고 작성자·상대 시간·좋아요·댓글을 표시한다.
 TOP10 중 랜덤4개 선택, 기록 상세 이동과 랭킹·스탬프의 주기적 조회는 유지한다.

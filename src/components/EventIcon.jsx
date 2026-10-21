@@ -1,6 +1,7 @@
 import React from 'react';
 const paths = {
   back: 'M15 5l-7 7 7 7',
+  pencil: 'm16 3 5 5-13 13H3v-5L16 3z M14 5l5 5',
   // Material Design Icons arrow-u-left-top: 앱 MapScreen의 뒤로가기 아이콘과 동일.
   undo: 'M20 13.5C20 17.09 17.09 20 13.5 20H6V18H13.5C16 18 18 16 18 13.5S16 9 13.5 9H7.83L10.91 12.09L9.5 13.5L4 8L9.5 2.5L10.92 3.91L7.83 7H13.5C17.09 7 20 9.91 20 13.5Z',
   chevron: 'M9 5l7 7-7 7',
